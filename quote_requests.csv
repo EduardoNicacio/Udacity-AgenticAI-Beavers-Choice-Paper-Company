@@ -1,9 +1,9 @@
 mood,job,need_size,event,response
 stressed,event manager,large,meeting,"I would like to request a large order of high-quality paper supplies for an upcoming event. We need 500 reams of A4 paper, 300 reams of letter-sized paper, and 200 reams of cardstock. Please ensure the delivery is made by April 15, 2025. Thank you."
-pissed off,school board resouorce manager,large,meeting,"I need to order 10 reams of standard copy paper, 5 reams of cardstock, and 3 boxes of assorted colored paper. I need the order delivered by April 10, 2025, for an upcoming meeting."
+pissed off,school board resource manager,large,meeting,"I need to order 10 reams of standard copy paper, 5 reams of cardstock, and 3 boxes of assorted colored paper. I need the order delivered by April 10, 2025, for an upcoming meeting."
 miserable,event manager,small,festival,"I would like to place an order for 500 sheets of high-quality cardstock in various colors, 200 sheets of standard printer paper, and 1000 flyers printed in full color. I need these supplies delivered by April 15, 2025, to ensure everything is ready for the festival. Thank you."
 pissed off,restaurant manager,small,concert,"I need to order 1000 sheets of high-quality A4 paper and 500 sheets of cardstock for printing concert materials. I need these supplies delivered by April 10, 2025."
-pissed off,school board resouorce manager,large,assembly,"I need to order 500 sheets of A4 paper, 300 sheets of colored paper, and 200 sheets of cardstock for the assembly. Please deliver the supplies by April 15, 2025."
+pissed off,school board resource manager,large,assembly,"I need to order 500 sheets of A4 paper, 300 sheets of colored paper, and 200 sheets of cardstock for the assembly. Please deliver the supplies by April 15, 2025."
 stressed,retail store manager,small,assembly,"We need to order 500 sheets of A4 white paper and 300 sheets of colored paper for our assembly event. Please ensure delivery by April 15, 2025. Thank you."
 happy,restaurant manager,small,performance,"I would like to order 500 sheets of high-quality A4 paper, 300 sheets of cardstock, and 200 sheets of colored paper for our upcoming performance. We need the supplies delivered by April 15, 2025."
 stressed,restaurant manager,medium,party,"I would like to place a medium order for paper supplies, including 500 dinner napkins, 300 paper plates, and 200 disposable cups. I need the supplies delivered by April 20, 2025, for our upcoming party. Thank you."
@@ -53,7 +53,7 @@ Thank you for your assistance.
 
 Best regards,
 [Your Name]"
-happy,school board resouorce manager,small,parade,"I would like to order 500 sheets of colorful poster paper, 200 rolls of crepe paper, and 100 packs of glitter paper for the parade event. I need the supplies delivered by April 15, 2025."
+happy,school board resource manager,small,parade,"I would like to order 500 sheets of colorful poster paper, 200 rolls of crepe paper, and 100 packs of glitter paper for the parade event. I need the supplies delivered by April 15, 2025."
 pissed off,school principal,small,ceremony,"I would like to place an order for 500 sheets of high-quality white cardstock and 1000 sheets of colored printer paper for our upcoming ceremony. Please ensure delivery by April 15, 2025. Thank you."
 pissed off,non-profit director,small,celebration,"I would like to place a small order for 500 sheets of high-quality cardstock in various colors, along with 200 sheets of recycled paper. Additionally, I need 100 pack of environmentally friendly paper cups and 100 paper plates for the event. Please ensure that the order is delivered by April 15, 2025."
 happy,city hall clerk,small,conference,"I would like to place an order for 500 sheets of A4 printer paper, 300 sheets of letterhead paper, and 200 sheets of colored cardstock. I need these supplies delivered by April 15, 2025, in time for our conference. Thank you!"
@@ -67,7 +67,7 @@ happy,business owner,small,party,"I would like to place an order for the followi
 - 100 paper napkins (decorative design)
 
 I need these supplies delivered by April 15, 2025. Thank you!"
-stressed,school board resouorce manager,small,gathering,"I would like to order 500 sheets of white cardstock, 300 sheets of colored paper, and 200 envelopes. I need the order delivered by April 10, 2025, for an upcoming gathering."
+stressed,school board resource manager,small,gathering,"I would like to order 500 sheets of white cardstock, 300 sheets of colored paper, and 200 envelopes. I need the order delivered by April 10, 2025, for an upcoming gathering."
 sad,city hall clerk,large,meeting,"I would like to place a large order for 500 reams of standard printer paper (8.5 x 11 inches) and 200 reams of cardstock (8.5 x 11 inches) for an upcoming meeting. Please ensure delivery by April 15, 2025. Thank you."
 pissed off,office manager,small,gathering,"I would like to place an order for 500 sheets of A4 printer paper, 300 sheets of letter-sized paper, and 100 sheets of heavy cardstock. I need the supplies delivered by April 10th, 2025, for an event I'm organizing."
 stressed,business owner,large,reception,"Dear [Manufacturer's Name],
@@ -89,7 +89,7 @@ Best regards,
 [Your Company]  
 [Your Contact Information]"
 pissed off,school teacher,small,performance,"I would like to order 500 sheets of A4 white paper and 100 rolls of colored craft paper for our upcoming performance. I need these supplies delivered by April 15, 2025."
-pissed off,school board resouorce manager,large,performance,"We need to place a large order for the following paper supplies for the upcoming performance: 
+pissed off,school board resource manager,large,performance,"We need to place a large order for the following paper supplies for the upcoming performance: 
 
 - 500 sheets of heavy-weight cardstock (minimum 250 gsm) in assorted colors 
 - 1000 sheets of standard printing paper (A4 size)
@@ -97,7 +97,7 @@ pissed off,school board resouorce manager,large,performance,"We need to place a 
 
 We require the supplies to be delivered by April 15, 2025."
 sad,retail store manager,small,conference,"I would like to place an order for 200 A4 sheets of eco-friendly paper, 100 A3 sheets in assorted colors, and 50 packs of sticky notes in various sizes. We need these supplies delivered by April 15, 2025, in preparation for our conference. Thank you."
-sad,school board resouorce manager,medium,concert,"We would like to place a medium order for the following paper supplies for our upcoming concert:
+sad,school board resource manager,medium,concert,"We would like to place a medium order for the following paper supplies for our upcoming concert:
 
 - 200 sheets of high-quality glossy paper (A4 size) for promotional materials
 - 150 sheets of cardstock (A5 size) for tickets
@@ -201,7 +201,7 @@ sad,restaurant manager,medium,celebration,"I would like to place a medium order 
 I need these supplies delivered by April 15, 2025. Thank you."
 sad,school teacher,large,meeting,"I would like to place a large order for paper supplies for our upcoming meeting. We need 2,000 sheets of A4 printer paper, 1,000 sheets of letterhead paper, and 500 cardstock sheets in various colors. Please deliver these supplies by April 15, 2025. Thank you."
 stressed,non-profit director,large,gathering,"I would like to place a large order for paper supplies for our upcoming gathering. We need 500 reams of standard letter-sized paper, 200 reams of cardstock, and 300 packs of notepads. The supplies are needed by April 15, 2025. Thank you."
-happy,school board resouorce manager,medium,exhibition,"Dear [Manufacturer's Name],
+happy,school board resource manager,medium,exhibition,"Dear [Manufacturer's Name],
 
 I would like to place a medium order for the following paper supplies for our upcoming exhibition:
 
@@ -266,7 +266,7 @@ miserable,city hall clerk,small,celebration,"I would like to place an order for 
 pissed off,school teacher,small,reception,"I would like to order 200 sheets of A4 printing paper, 100 sheets of cardstock, and 50 rolls of decorative wrapping paper. I need these supplies delivered by April 15, 2025, for an upcoming reception."
 stressed,business owner,medium,party,"I would like to place a medium order for the following paper supplies for my upcoming party: 500 sheets of 8.5"" x 11"" white paper, 200 sheets of 12"" x 12"" colored cardstock, and 100 rolls of decorative washi tape. I need these supplies delivered by April 10, 2025."
 pissed off,non-profit director,large,reception,"I would like to place a large order for assorted paper supplies for our upcoming reception. Please provide a variety of sizes and weights, including letterhead, envelopes, and cardstock. We need the supplies delivered by April 15, 2025. Thank you."
-miserable,school board resouorce manager,medium,meeting,"I would like to place a medium order for A4 sheets, 80gsm, white paper. Please deliver 5,000 sheets by April 15, 2025, for our upcoming meeting. Thank you."
+miserable,school board resource manager,medium,meeting,"I would like to place a medium order for A4 sheets, 80gsm, white paper. Please deliver 5,000 sheets by April 15, 2025, for our upcoming meeting. Thank you."
 sad,office manager,medium,parade,"I would like to place a medium order for the following paper supplies for the parade:
 
 - 500 sheets of colored poster paper (various bright colors)
@@ -330,7 +330,7 @@ stressed,office manager,large,reception,"I would like to place a large order for
 
 We need these supplies delivered by April 15, 2025. Thank you."
 miserable,city hall clerk,small,show,"I would like to order 500 sheets of white A4 paper and 200 sheets of colorful cardstock for our upcoming event. We need these supplies delivered by April 15, 2025."
-happy,school board resouorce manager,small,reception,"I would like to place an order for 200 sheets of A4 recycled paper, 50 envelopes, and 100 sheets of cardstock in assorted colors. I need these supplies delivered by April 15, 2025, for our upcoming reception."
+happy,school board resource manager,small,reception,"I would like to place an order for 200 sheets of A4 recycled paper, 50 envelopes, and 100 sheets of cardstock in assorted colors. I need these supplies delivered by April 15, 2025, for our upcoming reception."
 sad,law firm receptionist,small,conference,"I would like to order 500 A4 printing sheets and 200 A3 display boards for our conference. Please deliver them by April 15, 2025. Thank you."
 stressed,event manager,large,demonstration,"I would like to place a large order for paper supplies for an upcoming demonstration. Please provide the following items:
 
@@ -359,7 +359,7 @@ Please deliver these supplies by April 15, 2025. Thank you."
 miserable,law firm receptionist,small,concert,"I would like to order the following paper supplies for the concert: 500 sheets of A4 glossy paper, 300 sheets of A5 card stock, and 200 sheets of poster paper. I need these supplies delivered by April 15, 2025. Thank you."
 pissed off,hotel manager,large,meeting,"I need to order 1,000 sheets of high-quality A4 paper, 500 sheets of letter-sized paper, and 200 packs of sticky notes for an upcoming meeting. I need these supplies delivered by April 15, 2025."
 pissed off,school principal,medium,party,"I would like to place an order for 500 sheets of colorful cardstock, 300 sheets of standard copier paper, 200 paper plates, and 200 paper cups. I need these supplies delivered by April 15, 2025, for an upcoming party. Thank you."
-pissed off,school board resouorce manager,medium,show,"I would like to place an order for the following paper supplies for the upcoming show:
+pissed off,school board resource manager,medium,show,"I would like to place an order for the following paper supplies for the upcoming show:
 
 - 200 reams of A4 copy paper (80 gsm)
 - 100 reams of colored cardstock (various colors)
