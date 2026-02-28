@@ -1,373 +1,397 @@
 request_id,request_date,cash_balance,inventory_value,response
-1,2025-04-01,45059.7,5005.3,"The requested paper supplies have been reordered. Expected delivery dates: A4 glossy paper - April 5, 2025, Heavy cardstock - April 2, 2025, Colored paper - April 2, 2025."
-2,2025-04-03,45059.7,5070.3,"The items have been reordered. Expected delivery date for balloons: April 7, 2025. The order will not be fulfilled immediately."
-3,2025-04-04,45559.7,5570.3,"### 1. Friendly Response Text
+1,2025-04-01,45124.7,4940.299999999999,"**Friendly Response Text:**
 
-Thank you for your order with Munder Difflin! We are pleased to confirm your order of 10,000 sheets of A4 paper, 5,000 sheets of A3 paper, and 500 reams of printer paper. Your items will be delivered as scheduled: the printer paper by April 8, 2025, and the A4 and A3 paper by April 11, 2025. Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again!
+Thank you for your order with Beaver's Choice Paper Company! We are delighted to confirm that your requested paper supplies will be delivered by April 15, 2025. Below, you will find the detailed invoice for your purchase. We appreciate your business and look forward to serving you again soon!
 
-### 2. Formatted Invoice (as plain text)
+**Formatted Invoice:**
 
 ```
-------------------------------------------------------------
-                    Munder Difflin Paper Co.
-------------------------------------------------------------
 Invoice No: INV-2025-001
-Date: 2025-04-04
+Date: 2025-04-01
 
-Bill To:
-Name: <placeholder>
+Bill/Ship To:
+Name:    <placeholder>
 Address: <placeholder>
-Email: <placeholder>
+Email:   <placeholder>
 
 Items:
-Qty     Description           Unit Price    Line Total
+Qty  Description                  Unit Price    Line Total
 ------------------------------------------------------------
-10,000  A4 Paper (sheets)     $0.05         $500.00
-5,000   A3 Paper (sheets)     $0.05         $250.00
-500     Printer Paper (reams) $3.00         $1,500.00
+200  A4 Glossy Paper                  $0.20        $40.00
+100  Heavy Cardstock (White)          $0.15        $15.00
+100  Colored Paper (Assorted Colors)  $0.10        $10.00
 
-------------------------------------------------------------
-Subtotal:                                  $2,250.00
-Discount:                                  $0.00
-Total Amount Due:                          $2,250.00
+Subtotal:                                          $65.00
+Discount:                                           $0.00
+Total Amount Due:                                  $65.00
 
-Expected Delivery Dates:
-- Printer Paper: April 8, 2025
-- A4 & A3 Paper: April 11, 2025
+Expected Delivery Date: 2025-04-15
 
-------------------------------------------------------------
-Thank you for your business!
-------------------------------------------------------------
+Thank you for shopping with us!
 ```
-
-Please let us know if there is anything else we can assist you with."
-4,2025-04-05,45559.7,5645.3,"The order for 500 sheets of high-quality, recycled cardstock and 250 sheets of A4 size printer paper has been placed for restocking. The expected delivery date is April 9, 2025. The order will not be fulfilled immediately."
-5,2025-04-05,45559.7,5740.3,"The items have been reordered. The expected delivery date is April 9, 2025. The order will not be fulfilled immediately."
-6,2025-04-06,45559.7,5820.3,"The items have been reordered. Expected delivery date for all items is April 10, 2025."
-7,2025-04-07,46039.7,6250.3,"### 1. Friendly Response Text
-
-Thank you for your order with Munder Difflin! We are pleased to confirm your order for various paper supplies, which will be delivered by April 14, 2025, just in time for your exhibition on April 15, 2025. Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again.
-
-### 2. Formatted Invoice
-
-```
-------------------------------------------------------------
-                    MUNDER DIFFLIN PAPER CO.
-------------------------------------------------------------
-Invoice No: INV-2025-001
-Date: 2025-04-07
-
-Bill To:
-Name: <placeholder>
-Address: <placeholder>
-Email: <placeholder>
-
-Items:
-Qty   Description                  Unit Price   Line Total
-------------------------------------------------------------
-500   Glossy A4 Paper              $0.20        $100.00
-1000  Matte A3 Paper               $0.05        $50.00
-300   Poster Boards (24"" x 36"")    $1.00        $300.00
-200   Heavyweight Cardstock        $0.15        $30.00
-
-------------------------------------------------------------
-Subtotal:                                       $480.00
-Discount (applied to A3 Paper):                 $0.00
-Total Amount Due:                               $480.00
-
-Expected Delivery Date: April 14, 2025
-
-------------------------------------------------------------
-Thank you for your business!
-------------------------------------------------------------
-```
-
-Please let us know if you have any questions or need further assistance."
-8,2025-04-07,46139.7,6550.3,"### 1. Friendly Response Text
-
-Thank you for your order with Munder Difflin! We are pleased to confirm your purchase of various paper supplies for your upcoming ceremony. Your order will be delivered by April 15, 2025, as requested. Please find the detailed invoice attached below.
-
-### 2. Formatted Invoice
-
-```
-------------------------------------------------------------
-                     Munder Difflin Paper Co.
-------------------------------------------------------------
-Invoice No: INV-2025-001
-Date: 2025-04-07
-
-Bill To:
-Name: <placeholder>
-Address: <placeholder>
-Email: <placeholder>
-
-Items:
-Qty   Description              Unit Price   Line Total
-------------------------------------------------------------
-500   A4 Glossy Paper          $0.20        $100.00
-1000  A4 Matte Paper           $0.05        $50.00
-2000  A5 Colored Paper         $0.10        $200.00
-3000  A4 Recycled Paper        $0.05        $150.00
-
-Subtotal:                                   $500.00
-Volume Discount (5%):                       -$25.00
-Total Amount Due:                           $475.00
-
-Expected Delivery Date: April 15, 2025
-
-------------------------------------------------------------
-Thank you for your business!
-We look forward to serving you again.
-------------------------------------------------------------
-```
-
-Note: The volume discount of 5% has been applied to your order, reducing the total amount due to $475.00."
-9,2025-04-07,46139.7,6560.3,"The requested paper supplies have been reordered. Expected delivery dates: A4 paper - April 11, 2025, A3 glossy paper - April 8, 2025, 100% recycled kraft paper envelopes - April 8, 2025."
-13,2025-04-08,46139.9,6585.3,"### 1. Friendly Response Text
-
-Thank you for your order of 500 sheets of A4 printing paper and 200 sheets of cardstock for your upcoming gathering. We are pleased to confirm that your order will be delivered on April 12, 2025. Please find the detailed invoice attached below. We appreciate your business and look forward to serving you again in the future.
-
-### 2. Formatted Invoice (as plain text)
-
-```
-------------------------------------------------------------
-                      Munder Difflin Paper Supply Co.
-------------------------------------------------------------
-Invoice No: INV-2025-001
-Date: 2025-04-08
-
-Bill To:
-Name: <placeholder>
-Address: <placeholder>
-Email: <placeholder>
-
-Items:
-Qty   Description              Unit Price   Line Total
-------------------------------------------------------------
-500   A4 Printing Paper        $0.05        $25.00
-200   Cardstock                $0.15        $30.00
-
-------------------------------------------------------------
-Subtotal:                                  $55.00
-Discount:                                  $0.00
-Total Amount Due:                          $55.00
-
-Expected Delivery Date: April 12, 2025
-
-------------------------------------------------------------
-Thank you for your business!
-------------------------------------------------------------
-```
-
-Please let us know if there are any further questions or if you need additional assistance."
-12,2025-04-08,46139.9,6615.3,"The items have been reordered. Expected delivery dates: Colorful cardstock - April 12, 2025, Standard printer paper - April 12, 2025, Paper napkins - April 9, 2025."
-10,2025-04-08,46139.9,6660.3,"The items have been reordered. Expected delivery date for both items is April 12, 2025."
-11,2025-04-08,46254.9,6660.3,"### 1. Friendly Response Text
-
-Thank you for your order with Munder Difflin! We are pleased to confirm your purchase of 500 sheets of A3 Glossy Paper and 300 sheets of A4 Matte Paper. Your order is scheduled for delivery by April 12, 2025, ensuring you have everything you need for your exhibition. Please find your invoice attached below.
-
-### 2. Formatted Invoice
-
-```
-------------------------------------------------------------
-                       MUNDER DIFFLIN
-                      PAPER SUPPLY CO.
-------------------------------------------------------------
-Invoice No: INV-2025-001
-Date: 2025-04-08
-
-Bill To:
-Name: <placeholder>
-Address: <placeholder>
-Email: <placeholder>
-
-Items:
-Qty   Description             Unit Price   Line Total
-------------------------------------------------------------
-500   A3 Glossy Paper         $0.20        $100.00
-300   A4 Matte Paper          $0.05        $15.00
-------------------------------------------------------------
-Subtotal:                                   $115.00
-Discount:                                   $0.00
-Total Amount Due:                           $115.00
-
-Expected Delivery Date: April 12, 2025
-
-------------------------------------------------------------
-Thank you for your business!
-We appreciate your trust in Munder Difflin.
-------------------------------------------------------------
-```
-"
-14,2025-04-09,46254.9,8985.300000000001,"The materials have been reordered. The expected delivery date for the items is April 16, 2025. The order will not be fulfilled immediately."
-15,2025-04-12,46254.9,9560.300000000001,"The items have been reordered. The expected delivery date for the supplies is April 19, 2025. The order will not be fulfilled immediately."
-16,2025-04-13,46399.9,9560.300000000001,"### 1. Friendly Response Text
-
-Dear Valued Customer,
-
-Thank you for placing your order with Munder Difflin Paper Supply Company. We are pleased to confirm your order for 500 sheets of A4 printer paper, 200 sheets of colorful construction paper, and 100 sheets of poster board. The A4 printer paper and colorful construction paper will be delivered immediately, and the poster board will arrive by April 14, 2025, just in time for your assembly event.
-
-Please find your invoice attached below. We appreciate your business and look forward to serving you again.
-
-Warm regards,
-
-Munder Difflin Paper Supply Company
 
 ---
 
-### 2. Formatted Invoice (as plain text)
-
-```
-------------------------------------------------------------
-                      Munder Difflin Paper Supply Company
-------------------------------------------------------------
-
-Invoice No: INV-2025-001
-Date: 2025-04-13
-
-Bill To:
-Name: <placeholder>
-Address: <placeholder>
-Email: <placeholder>
-
-------------------------------------------------------------
-Items:
-Qty   Description                   Unit Price   Line Total
-------------------------------------------------------------
-500   A4 Printer Paper              $0.05        $25.00
-200   Colorful Construction Paper   $0.10        $20.00
-100   Poster Board                  $1.00        $100.00
-------------------------------------------------------------
-Subtotal:                                        $145.00
-Discount:                                        $0.00
-Total Amount Due:                                $145.00
-
-Expected Delivery Date: 
-- A4 Printer Paper and Colorful Construction Paper: Immediate
-- Poster Board: April 14, 2025
-
-------------------------------------------------------------
-Thank you for your business!
-------------------------------------------------------------
-```"
-17,2025-04-14,46399.9,9610.300000000001,"The requested items have been reordered. The estimated delivery dates are as follows: A4 white printer paper by April 18, 2025, A3 colored paper by April 18, 2025, table napkins by April 21, 2025, paper cups by April 18, 2025, and paper plates by April 18, 2025."
-18,2025-04-14,46400.270000000004,9705.300000000001,"### 1. Friendly Response Text
-
-Thank you for your order! We are pleased to confirm that your order for 500 sheets of high-quality white cardstock, 1000 sheets of standard printing paper, and 200 sheets of colored paper has been successfully placed. While we understand you requested delivery by April 15, 2025, please note that the estimated delivery date is April 21, 2025. We apologize for any inconvenience this may cause and appreciate your understanding. An invoice is attached below for your records.
-
-### 2. Formatted Invoice
-
-```
-------------------------------------------------------------
-                      Munder Difflin Paper Supply Co.
-------------------------------------------------------------
-Invoice No: INV-2025-001
-Date: 2025-04-14
-
-Bill To:
-Name: <placeholder>
-Address: <placeholder>
-Email: <placeholder>
-
-Items:
-Qty   Description                   Unit Price   Line Total
-------------------------------------------------------------
-500   High-Quality White Cardstock  $0.20        $100.00
-1000  Standard Printing Paper       $0.05        $50.00
-200   Colored Paper                 $0.12        $24.00
-
-Subtotal:                                      $174.00
-Discount (5%):                                 -$8.70
-------------------------------------------------------------
-Total Amount Due:                              $165.30
-
-Expected Delivery Date: 2025-04-21
-
-Thank you for your business!
-------------------------------------------------------------
-```
-
-Please let us know if you have any questions or need further assistance. We look forward to serving you again soon!"
-19,2025-04-15,47325.270000000004,9705.300000000001,"### 1. Friendly Response Text
+Please let us know if there is anything else we can assist you with. Have a great day!"
+2,2025-04-03,45124.7,4940.299999999999,"The order for 500 sheets of colorful poster paper, 300 rolls of streamers, and 200 balloons has been placed. However, we currently have no stock available for these items. We have initiated a restocking order, and the expected delivery date from our supplier is April 7, 2025. Unfortunately, this means we cannot guarantee delivery by your requested date of April 15, 2025. Please let us know if you would like to proceed with the order based on this information."
+3,2025-04-04,47474.7,4940.299999999999,"**Friendly Response Text:**
 
 Dear Valued Customer,
 
-Thank you for choosing Munder Difflin for your paper supply needs. We are pleased to confirm your order for 2000 sheets of A4 Glossy Paper, 1500 sheets of A3 Matte Paper, and 1000 sheets of Cardstock in assorted colors. Please note that the A4 Glossy Paper and A3 Matte Paper will be delivered by April 22, 2025, and the Cardstock will be delivered by April 19, 2025.
+Thank you for your order with Beaver's Choice Paper Company. We are pleased to confirm that your order for 10,000 sheets of A4 paper, 5,000 sheets of A3 paper, and 500 reams of printer paper has been successfully processed. The delivery is scheduled to ensure all items arrive before your required date of April 15, 2025, with A4 and A3 paper expected by April 11, 2025, and printer paper by April 8, 2025.
 
-An invoice for your order is attached below. We appreciate your business and look forward to serving you again in the future.
+Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again in the future.
 
-Best regards,
-Munder Difflin Sales Team
-
-### 2. Formatted Invoice (as plain text)
+**Formatted Invoice:**
 
 ```
-------------------------------------------------------------
-                      MUNDER DIFFLIN
-                     PAPER SUPPLY CO.
-------------------------------------------------------------
 Invoice No: INV-2025-001
-Date: 2025-04-15
+Date: 2025-04-04
 
-Bill To:
-Name: <placeholder>
+Bill/Ship To:
+Name:    <placeholder>
 Address: <placeholder>
-Email: <placeholder>
+Email:   <placeholder>
 
 Items:
-Qty   Description             Unit Price   Line Total
+Qty   Description              Unit Price    Line Total
+-------------------------------------------------------
+10000 A4 Paper (80g/m²)            $0.05       $500.00
+5000  A3 Paper (80g/m²)            $0.07       $350.00
+500   Printer Paper (ream)         $3.00     $1,500.00
+
+Subtotal:                                    $2,350.00
+Discount (Bulk on A4):                         -$50.00
+Total Amount Due:                            $2,300.00
+
+Expected Delivery Date: April 11, 2025 (A4 & A3 Paper)
+                       April 8, 2025 (Printer Paper)
+
+Thank you for your shopping with us!
+```
+
+If you have any questions or require further assistance, please don't hesitate to contact us."
+4,2025-04-05,47587.2,4940.299999999999,"1. Friendly Response Text
+
+Thank you for your order with Beaver's Choice Paper Company! We are pleased to confirm that your order for 500 sheets of high-quality, recycled cardstock and 250 sheets of A4 size printer paper has been processed successfully. Your items are scheduled to be delivered by April 9, 2025, ensuring they arrive well before your requested date of April 15, 2025.
+
+Please find your detailed invoice attached below. If you have any questions or need further assistance, feel free to reach out to us.
+
+2. Formatted Invoice
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-05
+
+Bill/Ship To:
+Name:    <placeholder>
+Address: <placeholder>
+Email:   <placeholder>
+
+Items:
+Qty  Description                         Unit Price    Line Total
+-----------------------------------------------------------------
+500  High-Quality Recycled Cardstock     $0.20         $100.00
+250  A4 Size Printer Paper               $0.05         $12.50
+
+Subtotal:                                             $112.50
+Discount:                                              $0.00
+Total Amount Due:                                     $112.50
+
+Expected Delivery Date: 2025-04-09
+
+Thank you for shopping with us!
+We appreciate your business and look forward to serving you again.
+```
+
+If you have any further questions or need adjustments, feel free to reach out!"
+5,2025-04-05,47722.2,4940.299999999999,"**Friendly Response Text:**
+
+Thank you for your order with Beaver's Choice Paper Company! We're delighted to confirm your purchase of 500 sheets of 8.5""x11"" colored paper, 300 sheets of cardstock in various colors, and 200 rolls of decorative washi tape. Your supplies are scheduled to be delivered by April 15, 2025. Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again soon!
+
+---
+
+**Formatted Invoice:**
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-05
+
+Bill/Ship To:
+Name:    <placeholder>
+Address: <placeholder>
+Email:   <placeholder>
+
+Items:
+Qty  Description                      Unit Price    Line Total
+----------------------------------------------------------------
+500  8.5""x11"" Colored Paper                $0.10        $50.00
+300  Cardstock in Various Colors           $0.15        $45.00
+200  Decorative Washi Tape                 $0.20        $40.00
+
+Subtotal:                                             $135.00
+Discount (Volume):                                     -$5.00
+Total Amount Due:                                     $130.00
+
+Expected Delivery Date: 2025-04-15
+
+Thank you for shopping with Beaver's Choice Paper Company!
+```
+
+---
+
+Please let us know if you have any questions or need further assistance."
+6,2025-04-06,47817.2,4940.299999999999,"**Friendly Response Text:**
+
+Thank you for your order with Beaver's Choice Paper Company! We are pleased to confirm your purchase of 500 sheets of colorful construction paper, 300 sheets of white printer paper, and 200 sheets of cardstock in various colors. Your order is scheduled for delivery by April 15, 2025. Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again soon!
+
+---
+
+**Formatted Invoice:**
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-06
+
+Bill/Ship To:
+Name:    <placeholder>
+Address: <placeholder>
+Email:   <placeholder>
+
+Items:
+Qty Description                     Unit Price    Line Total
+----------------------------------------------------------------
+500 Colorful Construction Paper         $0.10        $50.00
+300 White Printer Paper                 $0.05        $15.00
+200 Cardstock in Various Colors         $0.15        $30.00
+
+Subtotal:                                           $95.00
+
+Total Amount Due:                                   $95.00
+
+Expected Delivery Date: 2025-04-15
+
+Thank you for shopping with us!
+```
+
+---"
+7,2025-04-07,48597.2,4940.299999999999,"1. **Friendly Response Text**
+
+Thank you for your order with Beaver's Choice Paper Company! We are pleased to confirm your order for various paper supplies, which will be delivered by April 15, 2025. Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again!
+
+2. **Formatted Invoice**
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-07
+
+Bill/Ship To:
+Name:    <placeholder>
+Address: <placeholder>
+Email:   <placeholder>
+
+Items:
+Qty  Description                  Unit Price    Line Total
+----------------------------------------------------------
+500  Glossy A4 Paper              $0.20         $100.00
+1000 Matte A3 Paper               $0.35         $350.00
+300  Poster Boards (24"" x 36"")    $1.00         $300.00
+200  Heavyweight Cardstock        $0.15         $30.00
+
+Subtotal:                                      $780.00
+Discount (5%):                                 -$39.00
+Total Amount Due:                              $741.00
+
+Expected Delivery Date: 2025-04-15
+
+Thank you for shopping with us!
+```
+
+Please let us know if you have any questions or need further assistance."
+8,2025-04-07,48597.2,4940.299999999999,"The order for the requested paper supplies has been processed as follows:
+
+- **A4 Glossy Paper**: Current stock is 200 sheets. A restocking order has been placed, and the expected delivery date is April 11, 2025.
+- **A4 Matte Paper**: Current stock is 0 sheets. A restocking order has been placed, and the expected delivery date is April 11, 2025.
+- **A5 Colored Paper**: Current stock is 0 sheets. A restocking order has been placed, and the expected delivery date is April 14, 2025.
+- **A4 Recycled Paper**: Current stock is 0 sheets. A restocking order has been placed, and the expected delivery date is April 14, 2025.
+
+Unfortunately, due to the restocking process, the order cannot be fulfilled immediately by April 15, 2025. Please let us know if you would like to proceed with the order or make any adjustments."
+9,2025-04-07,48597.2,4940.299999999999,"Unfortunately, we currently do not have any of the requested items in stock. We have placed a restocking order for all items:
+
+- 200 sheets of A4 white printer paper
+- 100 sheets of A3 glossy paper
+- 50 packets of 100% recycled kraft paper envelopes
+
+The estimated delivery dates from our suppliers are as follows:
+- A4 white printer paper: April 11, 2025
+- A3 glossy paper: April 8, 2025
+- 100% recycled kraft paper envelopes: April 8, 2025
+
+Since the A4 white printer paper will arrive after your requested delivery date of April 10, 2025, we will not be able to fulfill the order by your specified date. Please let us know if you would like to proceed with the order or make any adjustments."
+13,2025-04-08,48597.2,4940.299999999999,"Unfortunately, we do not have enough stock of A4 printing paper and cardstock to fulfill your order immediately. We have placed a restocking order for both items. However, the estimated delivery date from our supplier is April 12, 2025, which is after your requested delivery date of April 10, 2025. Therefore, we will not be able to fulfill your order by the requested date."
+12,2025-04-08,48682.2,4940.299999999999,"**Friendly Response Text**
+
+Thank you for your order with Beaver's Choice Paper Company! We are pleased to confirm your purchase of 200 sheets of colorful cardstock, 500 sheets of standard printer paper, and 100 paper napkins. Your order will be delivered by April 15, 2025, as requested. Please find your invoice attached below.
+
+---
+
+**Formatted Invoice**
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-08
+
+Bill/Ship To:
+Name:    <placeholder>
+Address: <placeholder>
+Email:   <placeholder>
+
+Items:
+Qty  Description              Unit Price    Line Total
+------------------------------------------------------
+200  Colorful Cardstock       $0.15         $30.00
+500  Standard Printer Paper   $0.10         $50.00
+100  Paper Napkins            $0.05         $5.00
+
+Subtotal:                                  $85.00
+Discount (Volume Discount on Printer Paper): $0.00
+Total Amount Due:                          $85.00
+
+Expected Delivery Date: April 15, 2025
+
+Thank you for your shopping with us!
+```
+
+---
+
+Please let us know if you have any questions or need further assistance. We appreciate your business and look forward to serving you again soon!"
+10,2025-04-08,48812.7,4940.299999999999,"**Friendly Response Text:**
+
+Thank you for your order with Beaver's Choice Paper Company! We are pleased to confirm that your order for 500 sheets of high-quality glossy paper and 300 sheets of sturdy cardstock has been successfully processed. Your items will be delivered on April 15, 2025, as requested. Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again soon!
+
+---
+
+**Formatted Invoice:**
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-08
+
+Bill/Ship To:
+Name:    <placeholder>
+Address: <placeholder>
+Email:   <placeholder>
+
+Items:
+Qty  Description                Unit Price    Line Total
+--------------------------------------------------------
+500  High-Quality Glossy Paper      $0.20        $100.00
+300  Sturdy Cardstock               $0.15         $45.00
+
+Subtotal:                                      $145.00
+Discount (10%):                                -$14.50
+Total Amount Due:                              $130.50
+
+Expected Delivery Date: 2025-04-15
+
+Thank you for your shopping with us!
+```
+
+---"
+11,2025-04-08,48927.7,4940.299999999999,"**Friendly Response Text**
+
+Thank you for your order with Beaver's Choice Paper Company! We're pleased to confirm your purchase of 500 sheets of A3 glossy paper and 300 sheets of A4 matte paper. Your order will be delivered by April 15, 2025, as requested. Please find your invoice attached below.
+
+**Formatted Invoice**
+
+```
 ------------------------------------------------------------
-2000  A4 Glossy Paper         $0.20        $400.00
-1500  A3 Matte Paper          $0.25        $375.00
-1000  Cardstock (assorted)    $0.15        $150.00
+Invoice No: INV-2025-001
+Date: 2025-04-08
 
-Subtotal:                                   $925.00
-Discount (5%):                              -$46.25
+Bill/Ship To:
+Name:    <placeholder>
+Address: <placeholder>
+Email:   <placeholder>
+
+Items:
+Qty Description         Unit Price    Line Total
 ------------------------------------------------------------
-Total Amount Due:                           $878.75
+500 A3 Glossy Paper          $0.20       $100.00
+300 A4 Matte Paper           $0.05        $15.00
+------------------------------------------------------------
+Subtotal:                               $115.00
+Discount (Volume):                       -$0.00
+Total Amount Due:                       $115.00
 
-Expected Delivery Dates:
-- Cardstock: April 19, 2025
-- A4 Glossy Paper & A3 Matte Paper: April 22, 2025
+Expected Delivery Date: 2025-04-15
 
-Thank you for your business!
+Thank you for shopping with us!
 ------------------------------------------------------------
 ```
-"
-20,2025-04-17,50225.270000000004,9955.300000000001,"### 1. Friendly Response Text
 
-Thank you for your order of concert paper supplies for the upcoming event. We are pleased to confirm your order of 5,000 flyers, 2,000 posters, and 10,000 tickets. Your items are scheduled to be delivered by May 1, 2025, well before your required date of May 15, 2025. An invoice is attached below for your records. We appreciate your business and look forward to serving you in the future.
+We appreciate your business and look forward to serving you again soon!"
+14,2025-04-09,48927.7,5190.299999999999,"The order for 5,000 sheets of A4 paper, 2,000 sheets of poster paper, and 500 sheets of cardstock has been placed. However, the current stock is insufficient for immediate fulfillment, and restocking orders have been initiated. The expected delivery dates from our suppliers are as follows:
 
-### 2. Formatted Invoice (as plain text)
+- A4 paper: April 16, 2025
+- Poster paper: April 16, 2025
+- Cardstock: April 13, 2025
+
+Unfortunately, the A4 and poster paper will not arrive by your requested delivery date of April 15, 2025. Therefore, the order cannot be fulfilled immediately. Please let us know if you would like to proceed with the order or make any adjustments."
+15,2025-04-12,48927.7,5190.299999999999,"Unfortunately, we do not have sufficient stock for the requested items: A4 white paper, A3 colored paper, and cardboard. We have initiated a restocking order for all items. However, the estimated delivery dates from our suppliers are as follows:
+
+- A4 white paper: Expected delivery by April 19, 2025
+- A3 colored paper: Expected delivery by April 19, 2025
+- Cardboard: Expected delivery by April 16, 2025
+
+Since the delivery dates are after your requested date of April 15, 2025, we will not be able to fulfill the order immediately. Please let us know if you would like to proceed with the order or make any adjustments."
+16,2025-04-13,48927.7,5190.299999999999,"The order for 200 sheets of colorful construction paper can be fulfilled immediately as we have sufficient stock. However, we do not have enough stock for 500 sheets of A4 printer paper and 100 sheets of poster board. A restocking order has been placed for these items. The A4 printer paper is expected to be available by April 17, 2025, and the poster board by April 14, 2025. Unfortunately, the A4 printer paper will not arrive in time for your assembly event on April 15, 2025. Therefore, the order cannot be fulfilled immediately."
+17,2025-04-14,48927.7,5190.299999999999,"The order cannot be fulfilled immediately due to insufficient stock for some items. Here's the breakdown:
+
+- **A4 white printer paper**: Only 200 sheets in stock. Additional 800 sheets have been reordered and will be available by April 18, 2025.
+- **A3 colored paper**: Sufficient stock available.
+- **Table napkins**: Out of stock. 2000 napkins have been reordered and will be available by April 21, 2025.
+- **Paper cups**: Out of stock. 1000 cups have been reordered and will be available by April 18, 2025.
+- **Paper plates**: Out of stock. 500 plates have been reordered and will be available by April 18, 2025.
+
+Unfortunately, the delivery cannot be made by April 15, 2025, as requested. Please let us know if you would like to proceed with the order or make any adjustments."
+18,2025-04-14,48927.7,5190.299999999999,"Unfortunately, we do not have sufficient stock to fulfill your order immediately. We have placed a restocking order for the items you requested. However, the estimated delivery date from our supplier is April 18, 2025, which is after your requested delivery date of April 15, 2025. Therefore, we will not be able to fulfill your order by the desired date."
+19,2025-04-15,48927.7,5190.299999999999,"Unfortunately, we do not have enough stock to fulfill your order immediately. We have placed a restocking order for the items you requested. However, the estimated delivery dates from our suppliers are as follows:
+
+- A4 glossy paper: Expected delivery by April 22, 2025
+- A3 matte paper: Expected delivery by April 22, 2025
+- Cardstock in assorted colors: Expected delivery by April 19, 2025
+
+Since the delivery dates for A4 glossy paper and A3 matte paper are after your requested delivery date of April 20, 2025, we will not be able to fulfill the order by your deadline. Please let us know if you would like to proceed with the order or make any adjustments."
+20,2025-04-17,51627.7,5190.299999999999,"1. **Friendly Response Text**
+
+Thank you for placing your order with Beaver's Choice Paper Company! We are pleased to confirm that your order for 5,000 flyers, 2,000 posters, and 10,000 tickets has been successfully processed. Your items are scheduled to be delivered by May 15, 2025, ensuring ample time for your concert preparations. Please find your detailed invoice attached below. We appreciate your business and look forward to serving you again!
+
+2. **Formatted Invoice**
 
 ```
-------------------------------------------------------------
-                      Munder Difflin Paper Supply Co.
-------------------------------------------------------------
 Invoice No: INV-2025-001
 Date: 2025-04-17
 
-Bill To:
-Name: <placeholder>
+Bill/Ship To:
+Name:    <placeholder>
 Address: <placeholder>
-Email: <placeholder>
+Email:   <placeholder>
 
 Items:
-Qty     Description      Unit Price    Line Total
-------------------------------------------------------------
-5,000   Flyers           $0.08         $400.00
-2,000   Posters          $1.00         $2,000.00
-10,000  Tickets          $0.05         $500.00
+Qty   Description       Unit Price    Line Total
 
-Subtotal:                              $2,900.00
-Discount (Volume):                     -$0.00
-Total Amount Due:                      $2,900.00
+5,000 Flyers            $0.08         $400.00
+2,000 Posters           $0.90       $1,800.00
+10,000 Tickets          $0.05         $500.00
 
-Expected Delivery Date: May 1, 2025
+Subtotal:                           $2,700.00
 
-------------------------------------------------------------
-Thank you for your business!
-------------------------------------------------------------
+Total Amount Due:                   $2,700.00
+
+Expected Delivery Date: 2025-05-15
+
+Thank you for your shopping with us!
 ```
 
-Please let us know if you need any further assistance or if there are any changes to your order."
+---"
