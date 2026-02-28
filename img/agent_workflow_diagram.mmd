@@ -1,45 +1,43 @@
-flowchart TD
-    %% Orchestrator Agent Nodes
-    O1["Receive customer request"] --> O2{"Classify: INQUIRY or ORDER"}
-
-    %% Inventory Agent Nodes
-    I1["get_stock_level"]
-    I2["get_supplier_delivery_date"]
-    I3["create_transaction for restocking"]
-
-    %% Quote Agent Nodes
-    Q1["search_quote_history"]
-    Q2["generate_financial_report"]
-    Q3["generate strategic quote"]
-
-    %% Sales Finalization Agent Nodes
-    S2["get_supplier_delivery_date"]
-    S3["create_transaction for sales"]
-
-    %% Invoice Agent Nodes
-    V1["Format invoice text"]
-    V2["Insert placeholders if data missing"]
-    V3["Show discounts if applied"]
-
-    %% Connections
-    O2 -- INQUIRY --> I1 & I2
-    O2 -- ORDER --> I1 & I2 & Q1
-    I1 -- Not enough stock --> I3
-    I1 & I2 --> Q1 & Q2 & Q3
-    Q1 & Q2 & Q3 --> S2 & S3
-    S2 & S3 --> V1 & V2 & V3
-
-    %% Styling (optional) for grouping
-    style O1 fill:#f9f,stroke:#333,stroke-width:2px
-    style O2 fill:#ccf,stroke:#333,stroke-width:2px
-    style I1 fill:#ffc,stroke:#333,stroke-width:2px
-    style I2 fill:#ffc,stroke:#333,stroke-width:2px
-    style I3 fill:#ffc,stroke:#333,stroke-width:2px
-    style Q1 fill:#9f9,stroke:#333,stroke-width:2px
-    style Q2 fill:#9f9,stroke:#333,stroke-width:2px
-    style Q3 fill:#9f9,stroke:#333,stroke-width:2px
-    style S2 fill:#cff,stroke:#333,stroke-width:2px
-    style S3 fill:#cff,stroke:#333,stroke-width:2px
-    style V1 fill:#f99,stroke:#333,stroke-width:2px
-    style V2 fill:#f99,stroke:#333,stroke-width:2px
-    style V3 fill:#f99,stroke:#333,stroke-width:2px
+---
+config:
+  layout: fixed
+  theme: mc
+---
+flowchart TB
+ subgraph Agents["Agents"]
+        B{"INQUIRY/ORDER"}
+        A["Orchestration Agent"]
+        C["Inventory Agent"]
+        D["Inventory Agent"]
+        E["Quoting Agent"]
+        F["Ordering Agent"]
+        G["Invoice Agent"]
+        I["Advisory Report"]
+        H["Business Advisory Agent"]
+  end
+ subgraph Outcomes["Outcomes"]
+        J["Inventory Response"]
+        K["Quote Response"]
+        L["Sales Response"]
+        M["Invoice Response"]
+        N["Advisory Response"]
+  end
+    A -- Request Classification --> B
+    B -- INQUIRY --> C
+    B -- ORDER --> D
+    D -- Quote --> E
+    E -- Order --> F
+    F -- Invoice --> G
+    H -- Recommendations --> I
+    J --> C
+    L --> F
+    M --> G
+    N --> H
+    A --> B
+    B --> C & D
+    D --> E
+    E --> F
+    F --> G
+    G --> M
+    H --> I & N
+    K --> E

@@ -278,7 +278,7 @@ def create_transaction(
         Exception: For other database or execution errors.
     """
     # Debug log (comment out in production if needed)
-    logger.info(f"FUNC (create_transaction): Creating transaction for '{item_name}' ")
+    print(f"FUNC (create_transaction): Creating transaction for '{item_name}' ")
 
     try:
         # Convert datetime to ISO string if necessary
@@ -325,7 +325,7 @@ def get_all_inventory(as_of_date: str) -> Dict[str, int]:
         Dict[str, int]: A dictionary mapping item names to their current stock levels.
     """
     # Debug log (comment out in production if needed)
-    logger.info(f"FUNC (get_all_inventory): Fetching inventory as of '{as_of_date}'")
+    print(f"FUNC (get_all_inventory): Fetching inventory as of '{as_of_date}'")
 
     # SQL query to compute stock levels per item as of the given date
     query = """
@@ -342,8 +342,12 @@ def get_all_inventory(as_of_date: str) -> Dict[str, int]:
             HAVING stock > 0 \
             """
 
-    # Execute the query with the date parameter
-    result = pd.read_sql(query, db_engine, params={"as_of_date": as_of_date})
+    try:
+        # Execute the query with the date parameter
+        result = pd.read_sql(query, db_engine, params={"as_of_date": as_of_date})
+    except Exception as e:
+        logger.error(f"Error fetching inventory: {e}")
+        return {}
 
     # Convert the result into a dictionary {item_name: stock}
     return dict(zip(result["item_name"], result["stock"]))
@@ -381,14 +385,18 @@ def get_stock_level(item_name: str, as_of_date: Union[str, datetime]) -> dict:
                     AND transaction_date <= :as_of_date \
                   """
     # Debug log (comment out in production if needed)
-    logger.info(f"FUNC (get_stock_level): Fetching stock for '{item_name}' as of '{as_of_date}'")
+    print(f"FUNC (get_stock_level): Fetching stock for '{item_name}' as of '{as_of_date}'")
 
-    df = pd.read_sql(
-        stock_query,
-        db_engine,
-        params={"item_name": item_name, "as_of_date": as_of_date},
-    )
-
+    try:
+        df = pd.read_sql(
+            stock_query,
+            db_engine,
+            params={"item_name": item_name, "as_of_date": as_of_date},
+        )
+    except Exception as e:
+        logger.error(f"Error fetching stock level: {e}")
+        return {}
+    
     if df.empty:
         return {"item_name": item_name, "current_stock": 0}
 
@@ -413,14 +421,14 @@ def get_supplier_delivery_date(input_date_str: str, quantity: int) -> str:
         str: Estimated delivery date in ISO format (YYYY-MM-DD).
     """
     # Debug log (comment out in production if needed)
-    logger.info(f"FUNC (get_supplier_delivery_date): Calculating for qty {quantity} from date string '{input_date_str}'")
+    print(f"FUNC (get_supplier_delivery_date): Calculating for qty {quantity} from date string '{input_date_str}'")
 
     # Attempt to parse the input date
     try:
         input_date_dt = datetime.fromisoformat(input_date_str.split("T")[0])
     except (ValueError, TypeError):
         # Fallback to current date on format error
-        logger.warning(f"WARN (get_supplier_delivery_date): Invalid date format '{input_date_str}', using today as base.")
+        print(f"WARN (get_supplier_delivery_date): Invalid date format '{input_date_str}', using today as base.")
         input_date_dt = datetime.now()
 
     # Determine delivery delay based on quantity
@@ -454,7 +462,7 @@ def get_cash_balance(as_of_date: Union[str, datetime]) -> float:
         float: Net cash balance as of the given date. Returns 0.0 if no transactions exist or an error occurs.
     """
     # Debug log (comment out in production if needed)
-    logger.info(f"FUNC (get_cash_balance): Calculating cash balance as of '{as_of_date}'")
+    print(f"FUNC (get_cash_balance): Calculating cash balance as of '{as_of_date}'")
 
     try:
         # Convert date to ISO format if it's a datetime object
@@ -623,11 +631,10 @@ def search_quote_history(search_terms: List[str], limit: int = 5) -> List[Dict]:
 
 # Custom imports for your multi-agent system
 from typing import Dict, Literal
-
 from dotenv import load_dotenv
 
 from pydantic import BaseModel
-from pydantic_ai import Agent
+from pydantic_ai import Agent, UsageLimitExceeded
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.tools import Tool
 from pydantic_ai.settings import ModelSettings
@@ -639,16 +646,16 @@ load_dotenv()
 # Create a model instance with a custom API URL
 # This could be a self-hosted OpenAI-compatible API, Azure endpoint, or proxy
 # Note: OpenAIChatModel -> AsyncOpenAI -> reads OPENAI_API_KEY and OPENAI_BASE_URL from environment variables
+#       OPENAI_API_MODEL is being retrieved from the environment variables, with fallback to ""
 model = OpenAIChatModel(
-    model_name=os.getenv("OPENAI_API_MODEL")
+    model_name=os.getenv("OPENAI_API_MODEL", "gpt-4o-mini")
 )
 
 # Define tools for the agents
 tool_create_transaction = Tool(
     name="create_transaction",
     description="""
-        This function records a transaction of type 'stock_orders' or 'sales' with a specified
-        item name, quantity, total price, and transaction date into the 'transactions' table of the database.
+        Records a new transaction (stock order or sale) with specified item name, quantity, total price, and transaction date into the database's transactions table.
     """,
     function=create_transaction,
     require_parameter_descriptions=True
@@ -657,21 +664,16 @@ tool_create_transaction = Tool(
 tool_get_all_inventory = Tool(
     name="get_all_inventory",
     description="""
-        Retrieve a snapshot of available inventory as of a specific date.
-        This function calculates the net quantity of each item by summing
-        all stock orders and subtracting all sales up to and including the given date.            
-        Only items with positive stock are included in the result.
+        Retrieves a snapshot of available inventory as of a specified date by calculating net stock (sum of stock orders minus sales) for all items with positive quantities.
     """,
     function=get_all_inventory,
     require_parameter_descriptions=True
-
 )
 
 tool_get_stock_level = Tool(
     name="get_stock_level",
     description="""
-        This function records a transaction of type 'stock_orders' or 'sales' with a specified
-        item name, quantity, total price, and transaction date into the 'transactions' table of the database.
+        Retrieves the current stock level for a specified item as of a given date.
     """,
     function=get_stock_level,
     require_parameter_descriptions=True
@@ -680,13 +682,11 @@ tool_get_stock_level = Tool(
 tool_get_supplier_delivery_date = Tool(
     name="get_supplier_delivery_date",
     description="""
-        Estimate the supplier delivery date based on the requested order quantity and a starting date.
-    
-        Delivery lead time increases with order size:
-            - ≤10 units: same day
-            - 11–100 units: 1 day
-            - 101–1000 units: 4 days
-            - >1000 units: 7 days    
+        Estimates delivery date based on order quantity and starting date, with lead times determined by order size:
+        - Up to 10 units: same day
+        - 11–100 units: 1 day
+        - 101–1000 units: 4 days
+        - Over 1000 units: 7 days
     """,
     function=get_supplier_delivery_date,
     require_parameter_descriptions=True
@@ -695,9 +695,7 @@ tool_get_supplier_delivery_date = Tool(
 tool_get_cash_balance = Tool(
     name="get_cash_balance",
     description="""
-        Calculate the current cash balance as of a specified date.
-        The balance is computed by subtracting total stock purchase costs ('stock_orders')
-        from total revenue ('sales') recorded in the transactions table up to the given date.
+        Calculates cash balance as of a specified date by subtracting total stock purchase costs (from stock_orders) from total revenue (from sales) in the transactions table up to that date.
     """,
     function=get_cash_balance,
     require_parameter_descriptions=True
@@ -706,9 +704,8 @@ tool_get_cash_balance = Tool(
 tool_generate_financial_report = Tool(
     name="generate_financial_report",
     description="""
-        Generate a complete financial report for the company as of a specific date.
-        This includes:
-        - Cash balance
+        Generates a comprehensive financial report as of a specified date, including:
+        - Current cash balance
         - Inventory valuation
         - Combined asset total
         - Itemized inventory breakdown
@@ -721,20 +718,18 @@ tool_generate_financial_report = Tool(
 tool_search_quote_history = Tool(
     name="search_quote_history",
     description="""
-        Retrieve a list of historical quotes that match any of the provided search terms.
-        The function searches both the original customer request (from `quote_requests`) and
-        the explanation for the quote (from `quotes`) for each keyword. Results are sorted by
-        most recent order date and limited by the `limit` parameter.
+        Searches historical quotes for keywords in customer requests or quote explanations, returning results sorted by most recent order date and limited by the specified `limit` parameter.
     """,
     function=search_quote_history,
     require_parameter_descriptions=True
 )
 
+
 # Set up your agents and create an orchestration agent that will manage them.
-toolset_inventor_agent = [tool_get_all_inventory, tool_get_stock_level, tool_get_supplier_delivery_date, tool_create_transaction]
-toolset_quoting_agent = [tool_search_quote_history, tool_generate_financial_report]
-toolset_sales_finalization_agent = [tool_create_transaction, tool_get_supplier_delivery_date]
-toolset_business_advisor_agent = [tool_generate_financial_report, tool_get_cash_balance, tool_search_quote_history]
+inventory_agent_toolset = [tool_get_all_inventory, tool_get_stock_level, tool_get_supplier_delivery_date, tool_create_transaction]
+quoting_agent_toolset = [tool_search_quote_history, tool_generate_financial_report]
+ordering_agent_toolset = [tool_create_transaction, tool_get_supplier_delivery_date]
+business_advisory_agent_toolset = [tool_generate_financial_report, tool_get_cash_balance, tool_search_quote_history]
 
 
 # Define output model for the orchestration agent
@@ -744,7 +739,7 @@ class OrchestrationClassification(BaseModel):
 
 class InventoryResponse(BaseModel):
     answer: str
-    proceed_with_order: bool
+    proceed: bool
 
 
 # Definee the orchestration agent
@@ -783,11 +778,9 @@ orchestration_agent = Agent(model=model,
                             )
 
 # Defines the inventory agent
-# Manages the current stock level. Retrieves stock data, checks stock limits and triggers automatic 
-# reorders if required (e.g. via create_transaction for reorders).
 inventory_agent = Agent(model=model,
                        name="Inventory Agent",
-                       model_settings=ModelSettings(temperature=0.1),
+                       model_settings=ModelSettings(temperature=0.3),
                        system_prompt="""
                             You are the Inventory Agent for Beaver's Choice Paper Company, responsible for handling structured requests classified as either **INQUIRY** or **ORDER**. Follow the appropriate logic based on the classification and use the available tools to generate accurate responses.
 
@@ -806,7 +799,7 @@ inventory_agent = Agent(model=model,
                             - Use `create_transaction` to initiate a restocking order.  
                             - Use `get_supplier_delivery_date` to estimate restocking time.  
                             - Inform the next agent that the material has been reordered.  
-                            - If the supplier delivery date is **after** the expected delivery date, set `proceed_with_order` to `False` and explain to the customer that the order cannot be fulfilled immediately.  
+                            - If the supplier delivery date is **after** the expected delivery date, set `proceed` to `False` and explain to the customer that the order cannot be fulfilled immediately.  
 
                             ### Output Expectations:
                             - Clearly state whether stock is sufficient or not.  
@@ -824,32 +817,29 @@ inventory_agent = Agent(model=model,
                             ```python
                             class InventoryResponse(BaseModel):
                                 answer: str
-                                proceed_with_order: bool
+                                proceed: bool
                             ```
                             
                             Examples:
 
                             INQUIRY: Customer asks about A4 paper stock.
-                            Response: {"answer": "We have 500 units of A4 paper in stock.", "proceed_with_order": false}
+                            Response: {"answer": "We have 500 units of A4 paper in stock.", "proceed": false}
 
                             ORDER: Customer orders 1000 units of A4 paper (only 500 in stock).
-                            Response: {"answer": "The item has been reordered. Expected delivery: 2023-11-15.", "proceed_with_order": false}
+                            Response: {"answer": "The item has been reordered. Expected delivery: 2023-11-15.", "proceed": false}
 
                             Always follow this logic and ensure the output strictly adheres to the specified JSON format.
                             """,
-                       tools=toolset_inventor_agent,
+                       tools=inventory_agent_toolset,
                        output_type=InventoryResponse
                        )
 
-
-# Defines the quote agent
-# Analyzes past offers and prices in order to create a suitable offer for a customer request based on strategic specifications.
-# Takes into account, for example, volume discounts or key financial figures.
+# Defines the quoting agent
 quoting_agent = Agent(model=model,
-                      name="Quote Agent",
-                      model_settings=ModelSettings(temperature=0.3),
+                      name="Quoting Agent",
+                      model_settings=ModelSettings(temperature=0.7),
                       system_prompt="""
-                        You are the Quote Agent for Beaver's Choice Paper Company, responsible for generating competitive and strategic sales quotes based on:  
+                        You are the Quoting Agent for Beaver's Choice Paper Company, responsible for generating competitive and strategic sales quotes based on:  
                         - The customer's order request.  
                         - Inventory and delivery information provided by the Inventory Agent.  
                         - Historical quote and sales data.  
@@ -902,16 +892,13 @@ quoting_agent = Agent(model=model,
 
                         Focus solely on generating optimized quotes based on the provided information and business objectives.
                         """,
-                      tools=toolset_quoting_agent
+                      tools=quoting_agent_toolset
                       )
 
-
 # Define ordering agent
-# Takes over the last step: checks whether the ordered items are available and whether the delivery times are suitable,
-# and then creates a sales transaction. This completes the order with binding effect.
 ordering_agent  = Agent(model,
                         name="Ordering Agent",
-                        model_settings=ModelSettings(temperature=0.3),
+                        model_settings=ModelSettings(temperature=0.5),
                         system_prompt="""
                             You are the Ordering Agent for Beaver's Choice Paper Company, responsible for completing customer orders based on the provided quote and current inventory status.  
 
@@ -959,12 +946,11 @@ ordering_agent  = Agent(model,
 
                             Always ensure the transaction is recorded accurately and the customer is informed professionally.
                             """,
-                        tools=toolset_sales_finalization_agent
+                        tools=ordering_agent_toolset
                         )
 
-
 # Define invoicing agent
-# This agent generate a complete and professional **customer invoice** based on the finalized order
+# Note: toolless agent
 invoice_agent = Agent(model=model,
                       name="Invoicing Agent",
                       model_settings=ModelSettings(temperature=0.3),
@@ -1038,13 +1024,40 @@ invoice_agent = Agent(model=model,
                         Always ensure the invoice is accurate, well-formatted, and professional.
                         """)
 
+# Define the business advisory agent
+business_advisory_agent = Agent(model=model,
+                                name="Business Advisory Agent",
+                                model_settings=ModelSettings(temperature=0.5),
+                                system_prompt="""
+                                    You are the Business Advisory Agent for Beaver's Choice Paper Company, responsible for analyzing transactions and providing actionable recommendations to improve business efficiency and revenue.
 
+                                    ### Responsibilities:
+                                    1. **Analyze Transactions**: Review the financial report and transaction history to identify trends, inefficiencies, or opportunities.
+                                    2. **Identify Opportunities**: Look for patterns such as high-demand products, low-margin items, or inventory overstock/understock.
+                                    3. **Provide Recommendations**: Suggest changes to business operations, such as adjusting inventory levels, promoting certain products, or optimizing pricing strategies.
+                                    4. **Focus on Efficiency and Revenue**: Ensure recommendations are aimed at increasing profitability and operational efficiency.
+
+                                    ### Tools Available:
+                                    - `generate_financial_report`: Analyze sales trends and pricing patterns.   
+                                    - `get_cash_balance`: FCalculate the current cash balance as of a specified date.
+                                    - `search_quote_history`: Retrieve past quotes for reference.
+
+                                    ### Output Expectations:
+                                    - Provide clear, concise, and actionable recommendations.
+                                    - Highlight key areas for improvement and potential impact on revenue or efficiency.
+                                    - Use a professional and data-driven tone.
+
+                                    ### Example Output:
+                                    "Recommendation: Increase inventory of A4 paper by 20% due to high demand and consistent sales. Consider promoting glossy paper to reduce excess stock. Adjust pricing for cardstock to improve profit margins."
+
+                                    Always ensure recommendations are based on data and aligned with business goals.
+                                """,
+                                tools=business_advisory_agent_toolset
+                            )
 class WorkflowContext(BaseModel):
     """Shared context between agents"""
     request_id: str
-    original_request: str
-
-
+    request_body: str
 class MultiAgentWorkflow:
     def __init__(self):
         self.agents = {
@@ -1052,7 +1065,8 @@ class MultiAgentWorkflow:
             "inventory": inventory_agent,
             "quoting": quoting_agent,
             "sales": ordering_agent,
-            "invoice": invoice_agent
+            "invoice": invoice_agent,
+            "business_advisory": business_advisory_agent
         }
 
         self.agent_usage_count = {
@@ -1060,119 +1074,213 @@ class MultiAgentWorkflow:
             "quoting": 0,
             "sales": 0,
             "invoice": 0,
+            "business_advisory": 0
         }
 
     def handle_inquiry(self, context: WorkflowContext) -> str:
         """
-        Handle customer inquiries by using the quoting agent to generate a financial report
-        and the evaluation agent to assess the response.
+        Handle customer inquiries by using the quoting agent to generate a financial report and the evaluation agent to assess the response.
+
+        Parameters:
+        - context (WorkflowContext): The context of the inquiry including original request.
+        
+        Returns:
+        - str: The output from the evaluation agent after assessing the generated financial report.
         """
         # Call quoting agent to generate financial report
         prompt = f"""
         Classification: INQUIRY
 
-        User Request: {context.original_request}
+        User Request: {context.request_body}
         """
-        inventory_response = self.agents["inventory"].run_sync(
-            prompt,
-            deps=context
-        )
-        self.agent_usage_count["inventory"] += 1
-        return inventory_response.output
+        try:
+            inventory_response = self.agents["inventory"].run_sync(
+                prompt,
+                deps=context
+            )
+            self.agent_usage_count["inventory"] += 1
+            return inventory_response.output
+        except UsageLimitExceeded as e:
+            logger.error(f"Usage Limit exceeded calling inventory agent: {e}")
+            return "Usage Limit exceeded calling inventory agent."
 
     def handle_order(self, context: WorkflowContext) -> str:
+        """
+        Handle an order by orchestrating interactions with various agents to process the request.
+
+        Parameters:
+            context (WorkflowContext): The workflow context containing original user request and dependencies.
+
+        Returns:
+            str: Final response from the sales agent after processing all steps.
+        """
+
         inventory_prompt = f"""
             Classification: ORDER
-    
-            User Request: {context.original_request}
+        
+            User Request: {context.request_body}
         """
+        
         # Call inventory agent to check stock levels and handle order for stock items
-        inventory_response = self.agents["inventory"].run_sync(
-            inventory_prompt,
-            deps=context
-        )
-        self.agent_usage_count["inventory"] += 1
+        try:
+            inventory_response = self.agents["inventory"].run_sync(
+                inventory_prompt,
+                deps=context
+            )
+            self.agent_usage_count["inventory"] += 1
+        except UsageLimitExceeded as e:
+            logger.error(f"Usage Limit exceeded calling inventory agent: {e}")
+            return "Usage Limit exceeded calling inventory agent"
 
-        if not inventory_response.output.proceed_with_order:
+        if not inventory_response.output.proceed:
             # If inventory agent indicates order cannot proceed, return a message
-            logger.error(f"Order cannot be processed: {inventory_response.output.answer}")
+            logger.warning(f"Order cannot be processed: {inventory_response.output.answer}")
+            print(f"Order cannot be processed: {inventory_response.output.answer}")
             return inventory_response.output.answer
 
-        # Call quoting agent to generate a quote based on the order
         quote_prompt = f"""
-            User Request: {context.original_request}
+            User Request: {context.request_body}
             Inventory Context: {inventory_response.output.answer}
         """
-        quoting_response = self.agents["quoting"].run_sync(
-            quote_prompt,
-            deps=context
-        )
+        
+        # Call quoting agent to generate a quote based on the order
+        try:
+            quoting_response = self.agents["quoting"].run_sync(
+                quote_prompt,
+                deps=context
+            )
+        except UsageLimitExceeded as e:
+            logger.error(f"Usage Limit exceeded calling quoting agent: {e}")
+            return "Usage Limit exceeded calling quote agent"
+
         self.agent_usage_count["quoting"] += 1
 
-        # Call sales finalization agent to finalize the order
         sales_prompt = f"""
-            User Request: {context.original_request}
+            User Request: {context.request_body}
             Inventory Context: {inventory_response.output.answer}
             Quote Context: {quoting_response.output}
         """
-        sales_response = self.agents["sales"].run_sync(
-            sales_prompt,
-            deps=context
-        )
+        
+        # Call sales finalization agent to finalize the order
+        try:
+            sales_response = self.agents["sales"].run_sync(
+                sales_prompt,
+                deps=context
+            )
+        except UsageLimitExceeded as e:
+            logger.error(f"Usage Limit exceeded calling sales agent: {e}")
+            return "Usage Limit exceeded calling sales agent"
+        
         self.agent_usage_count["sales"] += 1
 
-        # Call invoice agent to generate an invoice for the order
         invoice_prompt = f"""
-            User Request: {context.original_request}
+            User Request: {context.request_body}
             Inventory Context: {inventory_response.output.answer}
             Quote Context: {quoting_response.output}
             Sales Context: {sales_response.output}
         """
-        invoice_response = invoice_agent.run_sync(
-            invoice_prompt,
-            deps=context
-        )
-        self.agent_usage_count["invoice"] += 1
+        
+        # Call invoice agent to generate an invoice for the order
+        try:
+            invoice_response = self.agents["invoice"].run_sync(
+                invoice_prompt,
+                deps=context
+            )
+            self.agent_usage_count["invoice"] += 1
+            return invoice_response.output
+        except UsageLimitExceeded as e:
+            logger.error(f"Usage Limit exceeded calling invoice agent: {e}")
+            return "Usage Limit exceeded calling invoice agent"
 
-        # Return the final response from the sales agent
-        return invoice_response.output
+    def handle_advisory_report(self, context: WorkflowContext) -> str:
+        """
+        Generates and prints business advisory recommendations based on the current financial report.
+
+        Args:
+            context (WorkflowContext): The workflow context containing request information.
+        """
+        try:
+            advisory_response = self.agents["business_advisory"].run_sync(
+                f"Financial report: {generate_financial_report(datetime.now().isoformat())}",
+                deps=context
+            )
+            self.agent_usage_count["business_advisory"] += 1
+            return advisory_response.output
+        except UsageLimitExceeded as e:
+            logger.error(f"Usage Limit exceeded calling business advisory agent: {e}")
+            print("Usage Limit exceeded calling business advisory agent.")
+            return ""
 
     def run(self, customer_request: str) -> str:
         """
-        Run the multi-agent workflow for a given customer request.
-        This method orchestrates the agents to handle the request and return a response.
-        """
+        Orchestrates multi-agent workflow for a given customer request.
         
+        This method creates a workflow context and orchestrates agents to handle the request,
+        ultimately returning a response based on the classification provided by the orchestration agent.
+
+        Parameters:
+            customer_request (str): The customer's request that needs to be handled.
+
+        Returns:
+            str: A response from the multi-agent workflow, indicating the outcome of handling the request.
+        
+        Raises:
+            Exception: If an unexpected error occurs during the execution of the workflow.
+        """
+
         # Create workflow context
-        context = WorkflowContext(
+        self.workflow_context = WorkflowContext(
             request_id=f"REQ_{datetime.now().strftime('%Y%m%d%H%M%S')}",
-            original_request=customer_request
+            request_body=customer_request
         )
 
         # Step 1: Call the orchestration agent to classify the request
-        orchestration_response = self.agents["orchestration"].run_sync(
-            customer_request,
-            deps=context
-        )
-        logger.info(f"--- Orchestration Agent classified request as: {orchestration_response.output.classification}")
+        try:
+            orchestration_response = self.agents["orchestration"].run_sync(
+                customer_request,
+                deps=self.workflow_context
+            )
+        except UsageLimitExceeded as e:
+            logger.error(f"Usage Limit exceeded calling orchestration agent: {e}")
+            return "Usage Limit exceeded calling orchestration agent"
+        
+        print(f"Orchestration Agent classified request as: {orchestration_response.output.classification}")
 
         # Step 2: Based on classification, route to appropriate agents
         if orchestration_response.output.classification == "INQUIRY":
             # Handle inquiries with quoting and evaluation agents
-            response = self.handle_inquiry(context)
+            response = self.handle_inquiry(self.workflow_context)
         elif orchestration_response.output.classification == "ORDER":
             # Handle orders with inventory and sales agents
-            response = self.handle_order(context)
+            response = self.handle_order(self.workflow_context)
         else:
             response = "Invalid classification received from orchestration agent."
 
         return response
 
-
 # Run your test scenarios by writing them here. Make sure to keep track of them.
 def run_test_scenarios():
+    """
+    Initializes a database and processes sample quote requests data.
+
+    This function performs the following steps:
+    1. Logs initialization of the Database.
+    2. Calls `init_database` with the specified db_engine.
+    3. Reads the CSV file "quote_requests_sample.csv".
+    4. Converts the 'request_date' column to datetime format, handling errors by coercing them into NaT (Not a Time).
+    5. Drops rows where 'request_date' is missing.
+    6. Sorts the DataFrame by 'request_date'.
+    7. Reads "quote_requests_sample.csv" again for consistency.
+    8. Converts the 'request_date' column to datetime format and sorts the DataFrame by this column.
+    9. Determines the initial date from the earliest request_date in the sample data.
+    10. Generates a financial report using the initial date and stores it in `report`.
+    11. Extracts the current cash balance and inventory value from the generated report.
+
+    If any error occurs during these steps, logs an error message and returns early.
+    """
     logger.info("Initializing Database...")
     init_database(db_engine)
+    
     try:
         quote_requests_sample = pd.read_csv("quote_requests_sample.csv")
         quote_requests_sample["request_date"] = pd.to_datetime(
@@ -1184,19 +1292,22 @@ def run_test_scenarios():
         logger.error(f"FATAL: Error loading test data: {e}")
         return
 
+    # Read the CSV file again for consistency
     quote_requests_sample = pd.read_csv("quote_requests_sample.csv")
 
-    # Sort by date
-    quote_requests_sample["request_date"] = pd.to_datetime(
-        quote_requests_sample["request_date"]
-    )
+    # Convert 'request_date' to datetime and sort by this column
+    quote_requests_sample["request_date"] = pd.to_datetime(quote_requests_sample["request_date"])
     quote_requests_sample = quote_requests_sample.sort_values("request_date")
 
-    # Get initial state
+    # Determine the initial date from the earliest request_date in the sample data
     initial_date = quote_requests_sample["request_date"].min().strftime("%Y-%m-%d")
-    report = generate_financial_report(initial_date)
-    current_cash = report["cash_balance"]
-    current_inventory = report["inventory_value"]
+    
+    # Generate a financial report using the initial date and store it in `report`
+    financial_report = generate_financial_report(initial_date)
+    
+    # Extract current cash balance and inventory value from the generated report
+    cash_balance = financial_report["cash_balance"]
+    inventory_value = financial_report["inventory_value"]
 
     ###########################################
     # INITIALIZE YOUR MULTI AGENT SYSTEM HERE #
@@ -1208,52 +1319,71 @@ def run_test_scenarios():
     for idx, row in quote_requests_sample.iterrows():
         request_date = row["request_date"].strftime("%Y-%m-%d")
 
-        logger.info(f"=== Request {idx + 1} ===")
-        logger.info(f"Context         : {row['job']} organizing {row['event']}")
-        logger.info(f"Request Date    : {request_date}")
-        logger.info(f"Cash Balance    : ${current_cash:.2f}")
-        logger.info(f"Inventory Value : ${current_inventory:.2f}")
+        print(' ' * 80)
+        print(f"===== Request {idx + 1} =====")
+        print(' ' * 80)
+        print(f"Context         : {row['job']} organizing {row['event']}")
+        print(f"Request Date    : {request_date}")
+        print(f"Cash Balance    : ${cash_balance:.2f}")
+        print(f"Inventory Value : ${inventory_value:.2f}")
 
         # Process request
-        request_with_date = f"{row['request']} (Date of request: {request_date})"
+        full_request = f"{row['request']} (Date of request: {request_date})"
 
         #####################################################
         # USE YOUR MULTI AGENT SYSTEM TO HANDLE THE REQUEST #
         #####################################################
 
-        response = multi_agent_workflow.run(request_with_date)
+        response = multi_agent_workflow.run(full_request)
 
         # Update state
-        report = generate_financial_report(request_date)
-        current_cash = report["cash_balance"]
-        current_inventory = report["inventory_value"]
+        financial_report = generate_financial_report(request_date)
+        cash_balance = financial_report["cash_balance"]
+        inventory_value = financial_report["inventory_value"]
 
-        logger.info(f"Response:           {response}")
-        logger.info(f"Updated Cash:      ${current_cash:.2f}")
-        logger.info(f"Updated Inventory: ${current_inventory:.2f}")
+        print(f"Response:          {response}")
+        print(f"Updated Cash:      ${cash_balance:.2f}")
+        print(f"Updated Inventory: ${inventory_value:.2f}")
 
         results.append(
             {
                 "request_id": idx + 1,
                 "request_date": request_date,
-                "cash_balance": current_cash,
-                "inventory_value": current_inventory,
+                "cash_balance": cash_balance,
+                "inventory_value": inventory_value,
                 "response": response,
             }
         )
 
-        time.sleep(1)
+        # Sleeps for 100ms
+        time.sleep(0.1)
 
+    #############################################################################################
     # Final report
+    # Includes final financial report, business advisory recommendations and agent call summary
+    #############################################################################################
     final_date = quote_requests_sample["request_date"].max().strftime("%Y-%m-%d")
     final_report = generate_financial_report(final_date)
-    logger.info("===== FINAL FINANCIAL REPORT =====")
-    logger.info(f"Final Cash:      ${final_report['cash_balance']:.2f}")
-    logger.info(f"Final Inventory: ${final_report['inventory_value']:.2f}")
 
-    logger.info("===== Agent Usage Summary =====")
+    print('=' * 80)
+    print("============================ FINAL FINANCIAL REPORT ============================")
+    print('=' * 80)
+    print(f"Final Cash:      ${final_report['cash_balance']:.2f}")
+    print(f"Final Inventory: ${final_report['inventory_value']:.2f}")
+
+    # Call business advisory agent for final recommendations
+    final_recommendations = multi_agent_workflow.handle_advisory_report(multi_agent_workflow.workflow_context)
+    print('=' * 80)
+    print("====================== BUSINESS ADVISORY RECOMMENDATIONS =======================")
+    print('=' * 80)
+    print(final_recommendations)
+
+    # Print the agents' calls summary
+    print('=' * 80)
+    print("============================== AGENT CALL SUMMARY ==============================")
+    print('=' * 80)
     for agent, count in multi_agent_workflow.agent_usage_count.items():
-        logger.info(f"{agent.capitalize()} Agent: {count} times")
+        print(f"{agent.capitalize()} Agent: {count} times")
 
     # Save results
     pd.DataFrame(results).to_csv("test_results.csv", index=False)
