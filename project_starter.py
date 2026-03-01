@@ -1,3 +1,17 @@
+"""
+Beaver's Choice Paper Company - Multi-Agent Workflow System
+
+This module implements a simple inventory, quoting, ordering, and invoicing workflow for a paper company.
+It uses SQLAlchemy with an SQLite database, pandas for data manipulation, and the pydantic_ai library to orchestrate multiple LLM-powered agents.
+
+The core components are:
+- A set of utility functions that interact with the database (inventory, transactions, cash balance, etc.).
+- Five agents: Orchestration Agent, Inventory Agent, Quoting Agent, Ordering Agent, Invoicing Agent.
+- The MultiAgentWorkflow class that coordinates the agents based on a customer's request.
+
+The script also contains a `run_test_scenarios` function which demonstrates how to initialize the database and process a batch of sample quote requests.
+"""
+
 import ast
 import os
 import time
@@ -185,10 +199,8 @@ def generate_sample_inventory(
                 "item_name": item["item_name"],
                 "category": item["category"],
                 "unit_price": item["unit_price"],
-                "current_stock": np.random.randint(200, 800),  # Realistic stock range
-                "min_stock_level": np.random.randint(
-                    50, 150
-                ),  # Reasonable threshold for reordering
+                "current_stock": np.random.randint(200, 800),
+                "min_stock_level": np.random.randint(50, 150),
             }
         )
 
@@ -309,7 +321,7 @@ def init_database(db_engine: Engine, seed: int = 11235) -> Engine:
                     "item_name": item["item_name"],
                     "transaction_type": "stock_orders",
                     "units": item["current_stock"],
-                    "price": item["current_stock"] * item["unit_price"],
+                    "price": -(item["current_stock"] * item["unit_price"]),
                     "transaction_date": initial_date,
                 }
             )
@@ -337,7 +349,7 @@ def create_transaction(
     date: Union[str, datetime],
 ) -> int:
     """
-    This function records a transaction of type 'stock_orders' or 'sales' with a specified
+    This function records a transaction of type 'stock_orders' or 'sales' with specified
     item name, quantity, total price, and transaction date into the 'transactions' table of the database.
 
     Args:
@@ -434,7 +446,6 @@ def get_all_inventory(as_of_date: str) -> Dict[str, int]:
     return dict(zip(result["item_name"], result["stock"]))
 
 
-# INFO: Switched return type to Dict[str, int] cause of pydantic_core._pydantic_core.PydanticSerializationError: Unable to serialize unknown type: <class 'pandas.core.frame.DataFrame'>
 def get_stock_level(item_name: str, as_of_date: Union[str, datetime]) -> dict:
     """
     Retrieve the stock level of a specific item as of a given date.
@@ -460,7 +471,7 @@ def get_stock_level(item_name: str, as_of_date: Union[str, datetime]) -> dict:
                                           WHEN transaction_type = 'stock_orders' THEN units
                                           WHEN transaction_type = 'sales' THEN -units
                                           ELSE 0
-                             END), 0) AS current_stock
+                                     END), 0) AS current_stock
                   FROM transactions
                   WHERE item_name = :item_name
                     AND transaction_date <= :as_of_date \
@@ -565,13 +576,15 @@ def get_cash_balance(as_of_date: Union[str, datetime]) -> float:
 
         # Compute the difference between sales and stock purchases
         if not transactions.empty:
+            # Sales revenue (positive)
             total_sales = transactions.loc[
                 transactions["transaction_type"] == "sales", "price"
             ].sum()
-            total_purchases = transactions.loc[
+            # Purchases are now stored as negative numbers – add them
+            total_purchases = -transactions.loc[
                 transactions["transaction_type"] == "stock_orders", "price"
             ].sum()
-            return float(total_sales - total_purchases)
+            return float(total_sales - total_purchases)  # sales + (‑purchases)
 
         return 0.0
 
@@ -727,7 +740,7 @@ from typing import Dict, Literal
 from dotenv import load_dotenv
 
 from pydantic import BaseModel
-from pydantic_ai import Agent, UsageLimitExceeded
+from pydantic_ai import Agent, UsageLimitExceeded, UsageLimits
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.tools import Tool
 from pydantic_ai.settings import ModelSettings
@@ -741,6 +754,7 @@ load_dotenv()
 # Note: OpenAIChatModel -> AsyncOpenAI -> reads OPENAI_API_KEY and OPENAI_BASE_URL from environment variables
 #       OPENAI_API_MODEL is being retrieved from the environment variables, with fallback to ""
 model = OpenAIChatModel(model_name=os.getenv("OPENAI_API_MODEL", "gpt-4o-mini"))
+
 
 # Define tools for the agents
 tool_create_transaction = Tool(
@@ -795,8 +809,8 @@ tool_get_cash_balance = Tool(
 tool_generate_financial_report = Tool(
     name="generate_financial_report",
     description="""
-        Generates a comprehensive financial report as of a specified date, including:
-        - Current cash balance
+        Generates a comprehensive financial report as of a specific date, including:
+        - Cash balance
         - Inventory valuation
         - Combined asset total
         - Itemized inventory breakdown
@@ -832,12 +846,28 @@ ordering_agent_toolset = [
 ]
 
 
-# Define output model for the orchestration agent
+# Defines the Orchestration Agent
 class OrchestrationClassification(BaseModel):
+    """
+    Pydantic model used by the orchestration agent to classify a customer request.
+
+    Attributes:
+        classification (Literal["INQUIRY", "ORDER"]): The determined type of request.
+    """
+
     classification: Literal["INQUIRY", "ORDER"]
 
 
 class InventoryResponse(BaseModel):
+    """
+    Response format from the Inventory Agent.
+
+    Attributes:
+        answer (str): Human-readable message to return to the user.
+        proceed (bool): Indicates whether the order can be processed immediately.
+        rationale (Optional[str]): Optional explanation when `proceed` is False.
+    """
+
     answer: str
     proceed: bool
     rationale: Optional[str] = None
@@ -849,33 +879,20 @@ orchestration_agent = Agent(
     name="Orchestration Agent",
     model_settings=ModelSettings(temperature=0.0),
     system_prompt="""
-                                You are the Orchestration Agent for Beaver's Choice Paper Company, responsible for classifying incoming customer requests into one of two categories: **INQUIRY** or **ORDER**.
+        You are the Orchestration Agent for Beaver's Choice Paper Company, responsible for classifying incoming customer requests into one of two categories: **INQUIRY** or **ORDER**.
 
-                                ### Classification Rules:
-                                
-                                1. **INQUIRY**: Classify as INQUIRY if the customer is seeking information, such as:
-                                - Availability, stock levels, or delivery dates.
-                                - Price comparisons or historical quotes without intent to purchase.
-                                2. **ORDER**: Classify as ORDER if the customer expresses intent to:
-                                - Purchase, order, or buy a product (even without specifying quantities).
-                                - Finalize or proceed with a purchase.
-                                3. **Default**: If unsure, classify as **INQUIRY**.
+        ### Classification Rules:
+        1. **INQUIRY**: Customer seeks information (availability, stock levels, delivery dates, price comparisons, historical quotes) without intent to purchase.
+        2. **ORDER**: Customer expresses intent to purchase, order, or buy a product.
+        3. **Default**: If unsure, classify as **INQUIRY**.
 
-                                ### Output Format:
-                                
-                                Return a JSON object adhering to the following Pydantic schema:
-                                ```python
-                                class OrchestrationClassification(BaseModel):
-                                    classification: Literal["INQUIRY", "ORDER"]
-                                ```
-                                
-                                Examples:
-
-                                INQUIRY: "Do you have A4 paper in stock?"
-                                ORDER: "I'd like to buy 100 units of copier paper."
-
-                                Focus solely on classification and ensure the output strictly follows the specified JSON format.
-                                """,
+        ### Output Format:
+        Return a JSON object adhering to the following Pydantic schema:
+        ```python
+        class OrchestrationClassification(BaseModel):
+            classification: Literal["INQUIRY", "ORDER"]
+        ```
+    """,
     output_type=OrchestrationClassification,
 )
 
@@ -883,72 +900,53 @@ orchestration_agent = Agent(
 inventory_agent = Agent(
     model=model,
     name="Inventory Agent",
-    model_settings=ModelSettings(temperature=0.3),
+    model_settings=ModelSettings(temperature=0.1),
     system_prompt="""
-                            You are the Inventory Agent for Beaver's Choice Paper Company, responsible for handling structured requests classified as either **INQUIRY** or **ORDER**. Follow the appropriate logic based on the classification and use the available tools to generate accurate responses.
+        You are the Inventory Agent for Beaver's Choice Paper Company, responsible for handling structured requests classified as either **INQUIRY** or **ORDER**. Follow the appropriate logic based on the classification and use the available tools to generate accurate responses.
 
-                            ### Decision Logic:
-                            
-                            #### Convert all the dates not in ISO8601 format to this format before calling any tool.
-                            
-                            Examples:
-                                'April 15, 2025' should be converted to '2025-04-15',
-                                'July 4, 2025' should be converted to '2025-07-04',
-                            
-                            #### **IF classification == "INQUIRY"**:
-                            1. Check stock levels using `get_stock_level` for the requested item(s).  
-                            2. If the customer asks about delivery feasibility, use `get_supplier_delivery_date` to estimate availability.  
-                            3. Provide a clear, helpful response with available quantity and, if relevant, the estimated delivery date.  
-                            4. **DO NOT** trigger any inventory changes.
+        ### Decision Logic:
+        #### Convert all dates not in ISO8601 format to this format before calling any tool.
+        Examples: 'April 15, 2025' → '2025-04-15', 'July 4, 2025' → '2025-07-04'.
 
-                            #### **IF classification == "ORDER"**:
-                            1. Check stock levels using `get_stock_level` for the requested item(s).
-                            2. **If stock is sufficient**: Confirm the order can be fulfilled immediately.
-                            3. **If stock is insufficient**:
-                                1. **Retrieve current cash balance** using `get_cash_balance`. If cash < estimated restock cost, set `proceed` to `False` and explain.
-                                2. If cash >= estimated restock cost:
-                                    1. Use `create_transaction` to initiate a restocking order.
-                                    2. Use `get_supplier_delivery_date` to estimate restocking time.
-                                    3. If the supplier delivery date is **after** the expected delivery date for all items, set `proceed` to `False` and explain to the customer that the order cannot be fulfilled immediately. Otherwise, set `proceed` to `True` and continue.
-                                    4. Inform the next agent that the material has been reordered.
+        #### IF classification == "INQUIRY":
+        1. Check stock levels using `get_stock_level` for the requested item(s).  
+        2. If delivery feasibility is asked, use `get_supplier_delivery_date`.  
+        3. Provide a clear response with quantity and estimated delivery date if relevant.  
+        4. **DO NOT** trigger any inventory changes.
 
-                            ### Output Expectations:
-                            - Clearly state whether stock is sufficient or not.
-                            - If a restocking order was triggered, include the expected delivery date and the outcome of `get_supplier_delivery_date`.
-                            - Be accurate, concise, and customer-friendly.
+        #### IF classification == "ORDER":
+        1. Check stock levels using `get_stock_level` for the requested item(s).  
+        2. If stock is sufficient: confirm fulfillment immediately.  
+        3. If stock insufficient:
+            a. Retrieve current cash balance via `get_cash_balance`.  
+                - If cash < estimated restock cost, set `proceed` to False and explain.  
+            b. If cash >= estimated restock cost:
+                i. Use `create_transaction` to reorder the item.  
+                ii. Estimate restocking time with `get_supplier_delivery_date`.  
+                iii. If delivery date is after expected delivery for all items, set `proceed` to False and explain; otherwise set `proceed` to True.  
+        4. Inform next agent that material has been reordered if applicable.
 
-                            ### Tools Available:
-                            - `get_all_inventory`: Retrieve a full inventory snapshot.
-                            - `get_cash_balance`: Calculate the current cash balance as of a specified date.
-                            - `get_stock_level`: Check quantity for a specific item.
-                            - `get_supplier_delivery_date`: Estimate restocking delivery time.
-                            - `create_transaction`: Place a restocking order (only for **ORDER** requests).
+        ### Output Expectations:
+        - State whether stock is sufficient.
+        - Include expected delivery date if a restocking order was triggered.
+        - Be concise, customer-friendly.
 
-                            ### Output Format:
-                            Return a JSON object adhering to the following Pydantic schema:
-                            ```python
-                            class InventoryResponse(BaseModel):
-                                answer: str
-                                proceed: bool
-                                rationale: Optional[str] = None
-                            ```
-                            
-                            Examples:
+        ### Tools Available:
+        - `get_all_inventory`
+        - `get_cash_balance`
+        - `get_stock_level`
+        - `get_supplier_delivery_date`
+        - `create_transaction`
 
-                            INQUIRY: Customer asks about A4 paper stock.
-                            Response: {"answer": "We have 500 units of A4 paper in stock.", "proceed": False}
-
-                            ORDER: Customer orders 1000 units of A4 paper for 2025-04-15 (only 500 in stock).
-                            Response: {"answer": "The item has been reordered. Expected delivery: 2025-04-18.", "proceed": False}
-                            
-                            ORDER: Customer orders 1000 units of A4 paper for 2025-04-20 (only 500 in stock).
-                            Response: {"answer": "The item has been reordered. Expected delivery: 2025-04-18.", "proceed": True}
-                            
-                            ORDER: Customer orders 500 units of A4 paper (1000 in stock).
-                            Response: {"answer": "Your order has been successfully placed. Expected delivery: 2025-04-15.", "proceed": True}
-
-                            Always follow this logic and ensure the output strictly adheres to the specified JSON format.
-                            """,
+        ### Output Format:
+        Return a JSON object adhering to the following Pydantic schema:
+        ```python
+        class InventoryResponse(BaseModel):
+            answer: str
+            proceed: bool
+            rationale: Optional[str] = None
+        ```
+    """,
     tools=inventory_agent_toolset,
     output_type=InventoryResponse,
 )
@@ -957,119 +955,61 @@ inventory_agent = Agent(
 quoting_agent = Agent(
     model=model,
     name="Quoting Agent",
-    model_settings=ModelSettings(temperature=0.7),
+    model_settings=ModelSettings(temperature=0.3),
     system_prompt="""
-                        You are the Quoting Agent for Beaver's Choice Paper Company, responsible for generating competitive and strategic sales quotes based on:  
-                        - The customer's order request.  
-                        - Inventory and delivery information provided by the Inventory Agent.  
-                        - Historical quote and sales data.  
+        You are the Quoting Agent for Beaver's Choice Paper Company, responsible for generating competitive and strategic sales quotes based on:
+        - The customer's order request.
+        - Inventory and delivery information provided by the Inventory Agent.
+        - Historical quote and sales data.
 
-                        ### Step-by-Step Responsibilities:
-                        1. **Analyze the Customer's Request**:  
-                        - Identify the requested item(s), quantity, and delivery expectations.  
+        ### Responsibilities:
+        1. Identify requested items, quantity, and delivery expectations from the customer's request.
+        2. Use inventory context (availability, delivery dates) - do not check inventory again.
+        3. Retrieve comparable past quotes with `search_quote_history`.
+        4. Apply volume discounts for large orders; factor in urgency, customer history, and market alignment.
+        5. Provide clear price per unit, total price, and remarks justifying any discount or special consideration.
 
-                        2. **Use Inventory Context**:  
-                        - Rely on provided inventory and delivery information (e.g., availability, delivery dates).  
-                        - **Do not** check inventory independently - this has already been handled.  
+        ### Tools Available:
+        - `search_quote_history`
+        - `generate_financial_report`
 
-                        3. **Analyze Pricing History**:  
-                        - Use `search_quote_history` to find comparable past quotes.  
-                        - Use `generate_financial_report` to identify pricing trends or profitability patterns if needed.  
-
-                        4. **Calculate a Competitive Quote**:  
-                        - Apply volume discounts for large orders.  
-                        - Factor in urgency, customer history (if available), and market alignment.  
-                        - Balance profitability with customer attractiveness.  
-
-                        5. **Prepare the Output**:  
-                        - Provide a clear price per unit and total price.  
-                        - Include remarks if applicable (e.g., "Discount applied for high volume").  
-
-                        ### Tools Available:
-                        - `search_quote_history`: Retrieve past quotes for reference.  
-                        - `generate_financial_report`: Analyze sales trends and pricing patterns.  
-
-                        ### Output Expectations:
-                        - **Price per unit** and **total price** must be clearly stated.  
-                        - Include remarks to justify discounts or special considerations.  
-                        - Ensure the quote is competitive, profitable, and aligned with business goals.  
-
-                        ### Examples:
-                        
-                        - **Request**: 500 units of A4 paper.  
-                        **Response**:  
-
-                        Price per unit : $0.10
-                        Total price    : $50.00
-                        Remarks        : Standard pricing applied.
-
-                        - **Request**: 5000 units of A4 paper.  
-                        **Response**:  
-
-                        Price per unit : $0.09
-                        Total price    : $450.00
-                        Remarks        : Volume discount applied.
-
-                        Focus solely on generating optimized quotes based on the provided information and business objectives.
-                        """,
+        ### Output Expectations:
+        - Clearly state price per unit and total price.
+        - Include remarks to justify discounts or special considerations.
+    """,
     tools=quoting_agent_toolset,
 )
 
 # Defines the Ordering Agent
 ordering_agent = Agent(
-    model,
+    model=model,
     name="Ordering Agent",
     model_settings=ModelSettings(temperature=0.3),
     system_prompt="""
-                            You are the Ordering Agent for Beaver's Choice Paper Company, responsible for completing customer orders based on the provided quote and current inventory status.  
+        You are the Ordering Agent for Beaver's Choice Paper Company, responsible for completing customer orders based on the provided quote and current inventory status.
 
-                            ### Responsibilities:
-                            1. **Assume Customer Acceptance**:  
-                            Proceed with the order as if the customer has accepted the quote. No confirmation is needed.  
+        ### Responsibilities:
+        1. Assume customer acceptance - proceed with the order.
+        2. Estimate delivery date using order size, current date, and `get_supplier_delivery_date` if needed.
+        3. Record the sale with `create_transaction`.
+        4. Respond to the customer: confirm success, provide estimated delivery date, thank them.
 
-                            2. **Estimate Delivery Date**:  
-                            Calculate the delivery date based on:  
-                            - Order size.  
-                            - Current date.  
-                            - Use `get_supplier_delivery_date` if necessary.  
+        ### Tools Available:
+        - `get_cash_balance`
+        - `get_supplier_delivery_date`
+        - `create_transaction`
 
-                            3. **Record the Sale**:  
-                            Use `create_transaction` to store the order details, including:  
-                            - Item name(s).  
-                            - Quantity.  
-                            - Price per unit.  
-                            - Total price.  
-                            - Order date.  
+        ### Important Notes:
+        - Do not generate a new quote or modify pricing.
+        - Do not create a resupply order if cash balance is negative.
+        - If restocking isn't possible, inform the customer.
 
-                            4. **Respond to the Customer**:  
-                            - Confirm the order was successful.  
-                            - Provide the estimated delivery date.  
-                            - Thank the customer for their business.  
-
-                            ### Tools Available:
-                            - `get_cash_balance`: Calculate the current cash balance as of a specified date.
-                            - `get_supplier_delivery_date`: Estimate delivery time for out-of-stock items.  
-                            - `create_transaction`: Finalize and save the sale in the system.
-
-                            ### Important Notes:
-                            - **Do not** generate a new quote or modify pricing - this has already been handled.  
-                            - **Do not** generate a resupply order if `get_cash_balance` returns a negative balance. 
-                            - If re-stocking isn't possible, inform this in your response.
-                            - Focus solely on verifying feasibility and executing the transaction.  
-                            - Maintain a polite, professional, and customer-friendly tone.  
-
-                            ### Output Expectations:
-                            Provide a clear and concise response to the customer, including:  
-                            1. Order confirmation.  
-                            2. Estimated delivery date.  
-                            3. A thank-you message.  
-
-                            ### Example Response:
-
-                            "Your order has been successfully placed. Estimated delivery date: 2023-11-20. Thank you for choosing Beaver's Choice Paper Company!"
-
-                            Always ensure the transaction is recorded accurately and the customer is informed professionally.
-                            """,
+        ### Output Expectations:
+        Provide a clear and concise response to the customer, including:
+        1. Order confirmation.
+        2. Estimated delivery date.
+        3. Thank-you message.
+    """,
     tools=ordering_agent_toolset,
 )
 
@@ -1077,74 +1017,27 @@ ordering_agent = Agent(
 invoice_agent = Agent(
     model=model,
     name="Invoicing Agent",
-    model_settings=ModelSettings(temperature=0.3),
+    model_settings=ModelSettings(temperature=0.1),
     system_prompt="""
-                        You are the Invoicing Agent for Beaver's Choice Paper Company, responsible for generating professional and complete customer invoices based on finalized orders.  
+        You are the Invoicing Agent for Beaver's Choice Paper Company, responsible for generating professional and complete customer invoices based on finalized orders.
 
-                        ### Input Data:
-                        You receive structured data including:  
-                        - Customer name and optional contact information (address, email).  
-                        - Item(s), quantities, unit prices, and total price.  
-                        - Discounts applied (if any).  
-                        - Delivery date (if known).  
+        ### Input Data:
+        Structured data including customer details, items, quantities, unit prices, total price, discounts (if any), and delivery date.
 
-                        ### Response Requirements:
-                        Your response consists of **two parts**:  
-                        1. **Friendly Response Text**:  
-                        - Thank the customer for their order.  
-                        - Confirm the ordered items and delivery date.  
-                        - Mention that the invoice is attached below.
+        ### Response Requirements:
+        1. Friendly response text: thank the customer, confirm items and delivery date, mention invoice attachment.
+        2. Formatted plain-text invoice block using ASCII layout with columns aligned by spaces (max width 80).
 
-                        2. **Formatted Invoice (Plain Text)**:  
-                        Generate a well-formatted `.txt` invoice block using ASCII layout. Include the following details:  
-                        - **Invoice Number**: Realistic placeholder (e.g., `INV-2025-XXX`).  
-                        - **Date of Issue**: Current date.  
-                        - **Customer Details**: Name, address, and email (use `[placeholder]` if missing).  
-                        - **Itemized List**: Name, quantity, unit price, and line total.  
-                        - **Total Amount**: Net total, discount (if applicable), and grand total.  
-                        - **Delivery Date**.  
-                        - **Thank You Note** at the bottom.  
+        ### Formatting Notes:
+        - Monospaced layout; align columns with spaces.
+        - Separate sections with dashed lines or whitespace.
 
-                        ### Formatting Notes:
-                        - Use a **monospaced layout** for the invoice block.  
-                        - Align columns with **spaces** (not tabs).  
-                        - Keep the width readable (max **80 characters**).  
-                        - Separate sections with dashed lines (`-----`) or whitespace.  
+        ### Example Friendly Response Text:
+        "Thank you for your order, John Doe! We confirm your purchase of 1000 units of A4 Paper (80g/m²), scheduled for delivery on 2025-04-27. Please find your invoice below."
 
-                        ### Example Invoice (Shortened):
-
-                        Invoice No: INV-2025-001
-                        Date: 2025-04-15
-
-                        Bill/Ship To:
-                        Name:    John Doe
-                        Address: [placeholder]
-                        Email:   john.doe@mail.com
-
-                        Items:
-                        Qty   Description          Unit Price    Line Total
-                        1000  A4 Paper (80g/m²)         $0.10       $100.00
-
-                        Subtotal:                                   $100.00
-                        Discount (10%):                             -$10.00
-                        Total Amount Due:                            $90.00
-
-                        Expected Delivery Date: 2025-04-27
-
-                        Thank you for shopping with us!
-                        
-                        ### Mandatory Requirements:
-                        - Always generate a **full invoice** with all required details.  
-                        - Explicitly list any discounts applied.  
-                        - Use `[placeholder]` for missing customer information.  
-                        - Maintain a **clear, professional tone**.  
-
-                        ### Example Friendly Response Text:
-                        
-                        "Thank you for your order, John Doe! We confirm your purchase of 1000 units of A4 Paper (80g/m²), scheduled for delivery on 2025-04-27. Please find your invoice below."  
-
-                        Always ensure the invoice is accurate, well-formatted, and professional.
-                        """,
+        Always ensure the invoice is accurate and professional.
+    """,
+    tools=[],
 )
 
 
@@ -1161,7 +1054,7 @@ class MultiAgentWorkflow:
 
     The workflow follows these steps:
 
-    1. Classify the request (INQUIRY / ORDER) via the orchestrator agent.
+    1. Classify the request (INQUIRY / ORDER) via the orchestration agent.
     2. For INQUIRIES: query inventory, generate a quote and return it.
     3. For ORDERS: check stock, possibly reorder, generate a quote,
         finalize the sale, and produce an invoice.
@@ -1169,8 +1062,15 @@ class MultiAgentWorkflow:
     The class keeps a usage counter for each worker agent to aid debugging
     and reporting.
     """
-    
+
     def __init__(self):
+        """
+        Initialize all agents and set up a usage counter.
+
+        Agents are stored in `self.agents` for easy lookup.  A separate dictionary,
+        `self.agent_usage_count`, tracks how many times each worker agent has been invoked.
+        This information can be used for monitoring or billing purposes.
+        """
         self.agents = {
             "orchestration": orchestration_agent,
             "inventory": inventory_agent,
@@ -1199,6 +1099,7 @@ class MultiAgentWorkflow:
                 User Request: {context.request_body}
                 """,
                 deps=context,
+                usage_limits=UsageLimits(request_limit=50),
             )
             self.agent_usage_count["inventory"] += 1
         except UsageLimitExceeded as e:
@@ -1211,7 +1112,11 @@ class MultiAgentWorkflow:
             Inventory Context: {inv_resp.output.answer}
         """
         try:
-            quote_resp = self.agents["quoting"].run_sync(quote_prompt, deps=context)
+            quote_resp = self.agents["quoting"].run_sync(
+                quote_prompt,
+                deps=context,
+                usage_limits=UsageLimits(request_limit=50),
+            )
             self.agent_usage_count["quoting"] += 1
         except UsageLimitExceeded as e:
             logger.error(f"Quoting agent error on inquiry: {e}")
@@ -1230,7 +1135,6 @@ class MultiAgentWorkflow:
         Returns:
             str: Final response from the sales agent after processing all steps.
         """
-
         inventory_prompt = f"""
             Classification: ORDER
         
@@ -1240,7 +1144,9 @@ class MultiAgentWorkflow:
         # Call inventory agent to check stock levels and handle order for stock items
         try:
             inventory_response = self.agents["inventory"].run_sync(
-                inventory_prompt, deps=context
+                inventory_prompt,
+                deps=context,
+                usage_limits=UsageLimits(request_limit=200),
             )
             self.agent_usage_count["inventory"] += 1
         except UsageLimitExceeded as e:
@@ -1260,7 +1166,9 @@ class MultiAgentWorkflow:
         # Call quoting agent to generate a quote based on the order
         try:
             quoting_response = self.agents["quoting"].run_sync(
-                quote_prompt, deps=context
+                quote_prompt,
+                deps=context,
+                usage_limits=UsageLimits(request_limit=50),
             )
         except UsageLimitExceeded as e:
             logger.error(f"Usage Limit exceeded calling quoting agent: {e}")
@@ -1277,7 +1185,9 @@ class MultiAgentWorkflow:
         # Call sales agent to finalize the order
         try:
             sales_response = self.agents["ordering"].run_sync(
-                sales_prompt, deps=context
+                sales_prompt,
+                deps=context,
+                usage_limits=UsageLimits(request_limit=50),
             )
         except UsageLimitExceeded as e:
             logger.error(f"Usage Limit exceeded calling sales agent: {e}")
@@ -1295,7 +1205,9 @@ class MultiAgentWorkflow:
         # Call invoice agent to generate an invoice for the order
         try:
             invoice_response = self.agents["invoice"].run_sync(
-                invoice_prompt, deps=context
+                invoice_prompt,
+                deps=context,
+                usage_limits=UsageLimits(request_limit=50),
             )
             self.agent_usage_count["invoice"] += 1
             return invoice_response.output
@@ -1319,7 +1231,6 @@ class MultiAgentWorkflow:
         Raises:
             Exception: If an unexpected error occurs during the execution of the workflow.
         """
-
         # Create workflow context
         self.workflow_context = WorkflowContext(
             request_id=f"REQ_{datetime.now().strftime('%Y%m%d%H%M%S')}",
@@ -1329,7 +1240,9 @@ class MultiAgentWorkflow:
         # Step 1: Call the orchestration agent to classify the request
         try:
             orchestration_response = self.agents["orchestration"].run_sync(
-                customer_request, deps=self.workflow_context
+                customer_request,
+                deps=self.workflow_context,
+                usage_limits=UsageLimits(request_limit=50),
             )
         except UsageLimitExceeded as e:
             logger.error(f"Usage Limit exceeded calling orchestration agent: {e}")
@@ -1358,6 +1271,7 @@ def run_test_scenarios():
     Initializes a database and processes sample quote requests data.
 
     This function performs the following steps:
+
     1. Logs initialization of the Database.
     2. Calls `init_database` with the specified db_engine.
     3. Reads the CSV file "quote_requests_sample.csv".
@@ -1390,11 +1304,13 @@ def run_test_scenarios():
     quote_requests_sample = pd.read_csv("quote_requests_sample.csv")
 
     # Convert 'request_date' to datetime and sort by this column
-    quote_requests_sample["request_date"] = pd.to_datetime(quote_requests_sample["request_date"], format="%m/%d/%y")
+    quote_requests_sample["request_date"] = pd.to_datetime(
+        quote_requests_sample["request_date"], format="%m/%d/%y"
+    )
     quote_requests_sample = quote_requests_sample.sort_values("request_date")
 
     # Determine the initial date from the earliest request_date in the sample data
-    initial_date = quote_requests_sample["request_date"].min().strftime("%Y-%m-%d")
+    initial_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Generate a financial report using the initial date and store it in `report`
     financial_report = generate_financial_report(initial_date)
@@ -1432,7 +1348,9 @@ def run_test_scenarios():
         response = multi_agent_workflow.run(full_request)
 
         # After the invoice agent records a sale, recompute the report using request date:
-        financial_report = generate_financial_report(datetime.now().isoformat())
+        financial_report = generate_financial_report(
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
         cash_balance = financial_report["cash_balance"]
         inventory_value = financial_report["inventory_value"]
 
@@ -1443,7 +1361,7 @@ def run_test_scenarios():
         print(" " * 80)
 
         # Determine fulfillment status
-        if isinstance(response, str) and "Invoice No" in response:
+        if isinstance(response, str) and "INVOICE" in response:
             status = "fulfilled"
         else:
             status = "unfulfilled"
@@ -1465,8 +1383,9 @@ def run_test_scenarios():
     ################
     # Final report #
     ################
-    final_date = quote_requests_sample["request_date"].max().strftime("%Y-%m-%d")
-    final_report = generate_financial_report(final_date)
+    final_report = generate_financial_report(
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    )
 
     print("=" * 80)
     print(
@@ -1474,7 +1393,7 @@ def run_test_scenarios():
     )
     print("=" * 80)
     print(f"Final Cash:      ${final_report['cash_balance']:.2f}")
-    print(f"Final Inventory: ${final_report['inventory_value']:.2f}")
+    print(f"Final Inventory: ${final_report['inventory_value']:.8f}")
 
     ###################################
     # Print the agents' calls summary #

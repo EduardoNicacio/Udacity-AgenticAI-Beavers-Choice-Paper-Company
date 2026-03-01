@@ -31,7 +31,7 @@ BeaverBot is a modular multi-agent order processing system that simulates real-w
     Create a `.env` file in the project root, and add your API keys to it:
 
     ```txt
-    OPENAI_API_KEY=voc-000000000000000000000000000000.00000000
+    OPENAI_API_KEY=voc-00000000000000000000000000000000abcd.12345678
     OPENAI_API_MODEL="gpt-4o-mini"
     OPENAI_BASE_URL=https://openai.vocareum.com/v1
     ```
@@ -47,6 +47,31 @@ BeaverBot is a modular multi-agent order processing system that simulates real-w
     ```sh
     python .\manual_tests.py
     ```
+
+## Project structure
+
+```sh
+Udacity-AgenticAI-Beavers-Choice-Paper-Company/
+├── img/
+├──── agent_workflow_diagram.mmd    # Mermaid diagram
+├──── agent_workflow_diagram.png    # Mermaid diagram in PNG format
+├── 1.PROJECT_OVERVIEW.md           # Project overview as found on Udacity
+├── 2.PROJECT_OPENAI_SETUP.md       # OpenAI Setup instructions as found on Udacity
+├── 3.PROJECT_INSTRUCTIONS.md       # Project instructions as found on Udacity
+├── 4.PROJECT_ENVIRONMENT_SETUP.md  # Environment setup instructions as found on Udacity
+├── 5.PROJECT_RUBRIC.md             # Project Rubrics as found on Udacity
+├── design_notes.md                 # This document
+├── manual_tests.py                 # A simple script that performs a couple of tests (INQUIRY, ORDER) based on simpler prompts
+├── manual_tests.txt                # The output results from the script above
+├── project_starter.py              # The main project script
+├── quote_requests_sample.csv       # Data-set containing ~20 different test cases
+├── quote_requests.csv              # A data-set that comes from Udacity
+├── quotes.csv                      # Another data-set that comes from Udacity
+├── README.md                       # The project readme file that comes from Udacity
+├── requirements.txt                # The list of requirements (Python libraries) that need to be installed. See Project Setup above.
+├── run_test_scenarios.txt          # The results from run_test_scenarios(), in plain text
+└── test_results.csv                # Data-set that contains the test results from run_test_scenarios()
+```
 
 ## Overall Rubrics Assessment – 100 %
 
