@@ -97,59 +97,8 @@ Udacity-AgenticAI-Beavers-Choice-Paper-Company/
   * Invoice Agent – invoice generation (no tools needed).  
   * Orchestration Agent – classification and routing.
 
-```mermaid
----
-config:
-  theme: neo
-  themeVariables:
-    primaryColor: '#4c8bf5'
-    edgeLabelBackground: '#fff'
-  layout: fixed
----
-flowchart TB
- subgraph Orchestration["Orchestration"]
-        O["Orchestration Agent"]
-  end
- subgraph Inventory["Inventory"]
-        I["Inventory Agent"]
-        get_stock_level["Tool: **get_stock_level**<br>(stock for a specific item)"]
-        get_supplier_delivery_date["Tool: **get_supplier_delivery_date**<br>(estimate delivery date)"]
-        create_transaction["Tool: **create_transaction**<br>(record a stock order or sale)"]
-        get_all_inventory["Tool: **get_all_inventory**<br>(snapshot of all items)"]
-        get_cash_balance["Tool: **get_cash_balance**<br>(verify cash before re-stocking)"]
-  end
- subgraph Quoting["Quoting"]
-        Q["Quoting Agent"]
-        search_quote_history["Tool: **search_quote_history**<br>(lookup past quotes)"]
-        generate_financial_report["Tool: **generate_financial_report**<br>(financial snapshot)"]
-  end
- subgraph Ordering["Ordering"]
-        S["Ordering Agent"]
-  end
- subgraph Invoice["Invoice"]
-        Inv["Invoice Agent"]
-  end
-    I -- uses --> get_stock_level & get_supplier_delivery_date & create_transaction & get_all_inventory & get_cash_balance
-    Q -- uses --> search_quote_history & generate_financial_report
-    S -- uses --> get_cash_balance & create_transaction & get_supplier_delivery_date
-    O -- classifies request --> I & Q
-    I -- "proceed = true" --> S
-    I -- "proceed = false" --> O
-    Q -- quote ready --> S
-    S -- sale recorded --> Inv
-    I -- reordered --> Q
-
-     get_stock_level:::tool
-     get_supplier_delivery_date:::tool
-     get_supplier_delivery_date:::tool
-     create_transaction:::tool
-     create_transaction:::tool
-     get_all_inventory:::tool
-     get_cash_balance:::tool
-     get_cash_balance:::tool
-     search_quote_history:::tool
-     generate_financial_report:::tool
-```
+![Mermaid Diagram](./img/agent_workflow_diagram.png)
+Figure 1. Mermaid diagram showing the agent workflow, tools conventions and utilization.
 
 ### 2. Implementation
 
