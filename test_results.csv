@@ -1,21 +1,129 @@
-request_id,request_date,cash_balance,inventory_value,response
-1,2025-04-01,45059.7,4940.299999999999,Usage Limit exceeded calling inventory agent
-2,2025-04-03,45059.7,4940.299999999999,The items have been reordered. Expected delivery: 2025-04-07.
-3,2025-04-04,45059.7,4940.299999999999,"The order for A3 paper and printer paper has been placed. Expected delivery dates are as follows: A3 paper by 2025-04-11 and printer paper by 2025-04-08. Unfortunately, we cannot fulfill the order for A4 paper as we only have 272 sheets in stock, which is insufficient for your request of 10,000 sheets."
-4,2025-04-05,45059.7,4940.299999999999,The items have been reordered. Expected delivery for high-quality recycled cardstock: 2025-04-09. Expected delivery for A4 size printer paper: 2025-04-09.
-5,2025-04-05,45059.7,4940.299999999999,Usage Limit exceeded calling inventory agent
-6,2025-04-06,45059.7,4940.299999999999,The items have been reordered. Expected delivery: 2025-04-10.
-7,2025-04-07,45059.7,4940.299999999999,"The items have been reordered. Expected delivery for all items is April 11, 2025. However, please note that this is after your requested delivery date of April 15, 2025, so the order cannot be fulfilled immediately."
-8,2025-04-07,45059.7,4940.299999999999,"The item has been reordered. Expected delivery for A4 matte paper: 2025-04-14, A5 colored paper: 2025-04-14, A4 recycled paper: 2025-04-14. Unfortunately, we cannot fulfill your order for A4 glossy paper as we only have 200 sheets in stock, and you requested 500 sheets. Therefore, the order cannot be fulfilled immediately."
-9,2025-04-07,45059.7,4940.299999999999,"The item has been reordered. Expected delivery for A4 white printer paper is 2025-04-11, for A3 glossy paper is 2025-04-08, and for 100% recycled kraft paper envelopes is 2025-04-08. Unfortunately, the A4 white printer paper will not arrive by your requested delivery date of April 10, 2025, so the order cannot be fulfilled immediately."
-13,2025-04-08,45059.7,4940.299999999999,"The item has been reordered. Expected delivery: 2025-04-12. Unfortunately, we cannot fulfill your order by April 10, 2025."
-12,2025-04-08,45059.7,4940.299999999999,Usage Limit exceeded calling inventory agent
-10,2025-04-08,45059.7,4940.299999999999,"The item has been reordered. Expected delivery: 2025-04-12. Unfortunately, this is after your requested delivery date of April 15, 2025, so the order cannot be fulfilled immediately."
-11,2025-04-08,45059.7,4940.299999999999,The item A3 glossy paper has been reordered. Expected delivery: 2025-04-12. The A4 matte paper is in stock and can be fulfilled immediately.
-14,2025-04-09,45059.7,4940.299999999999,"The item has been reordered. Expected delivery for poster paper: 2025-04-16. Expected delivery for cardstock: 2025-04-13. Unfortunately, we cannot fulfill your order for A4 paper immediately as we only have 272 sheets in stock, which is insufficient for your request of 5,000 sheets."
-15,2025-04-12,45059.7,4940.299999999999,Usage Limit exceeded calling inventory agent
-16,2025-04-13,45059.7,4940.299999999999,"The item has been reordered. Expected delivery for A4 printer paper: 2025-04-17. Expected delivery for poster board: 2025-04-14. Unfortunately, we cannot fulfill your order by April 15, 2025, as the delivery dates exceed your requirement."
-17,2025-04-14,45059.7,4940.299999999999,Usage Limit exceeded calling inventory agent
-18,2025-04-14,45059.7,4940.299999999999,"The items have been reordered. Expected delivery: 2025-04-18. Unfortunately, we cannot fulfill your order by the requested date of April 15, 2025."
-19,2025-04-15,45059.7,4940.299999999999,Usage Limit exceeded calling inventory agent
-20,2025-04-17,45059.7,4940.299999999999,"The items have been reordered. Expected delivery: 2025-04-24. Please note that this is after your requested delivery date of May 15, 2025, so the order cannot be fulfilled immediately."
+request_id,request_date,cash_balance,inventory_value,status,response
+1,2025-04-01,43376.56,2723.4400000000005,fulfilled,"Thank you for your order, valued customer! We confirm your purchase of the following items:  
+- 200 sheets of A4 glossy paper  
+- 100 sheets of heavy cardstock (white)  
+- 100 sheets of colored paper (assorted colors)  
+
+Your supplies are scheduled for delivery on April 5, 2025. Please find your invoice below.
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-01
+
+Bill/Ship To:
+Name:    [placeholder]
+Address: [placeholder]
+Email:   [placeholder]
+
+Items:
+Qty   Description                       Unit Price    Line Total
+200   A4 Glossy Paper                     $0.20       $40.00
+100   Heavy Cardstock (white)             $0.50       $50.00
+100   Colored Paper (assorted colors)     $0.10       $10.00
+
+Subtotal:                                      $100.00
+Discount:                                        $0.00
+Total Amount Due:                               $100.00
+
+Expected Delivery Date: 2025-04-05
+
+Thank you for shopping with us!
+```"
+2,2025-04-03,39226.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of colorful poster paper, 300 rolls of streamers, and 200 balloons, scheduled for delivery on April 15, 2025. Please find your invoice below.
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-03
+
+Bill/Ship To:
+Name:    [placeholder]
+Address: [placeholder]
+Email:   [placeholder]
+
+Items:
+Qty   Description                   Unit Price    Line Total
+500   Colorful Poster Paper               $0.10       $50.00
+300   Streamers                           $2.50      $750.00
+200   Balloons                            $0.25       $50.00
+
+Subtotal:                                      $850.00
+Discount:                                       $0.00
+Total Amount Due:                             $850.00
+
+Expected Delivery Date: 2025-04-07
+
+Thank you for shopping with us!
+```"
+3,2025-04-04,39226.56,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Current stock levels are insufficient for A4 and A3 paper.
+4,2025-04-05,37476.56,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Stock was insufficient for both high-quality, recycled cardstock and A4 size printer paper."
+5,2025-04-05,33216.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of 8.5""x11"" colored paper, 300 sheets of cardstock in various colors, and 200 rolls of decorative washi tape, scheduled for delivery on April 9, 2025. Please find your invoice below.
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-05
+
+Bill/Ship To:
+Name:    [placeholder]
+Address: [placeholder]
+Email:   [placeholder]
+
+Items:
+Qty   Description                     Unit Price    Line Total
+500   Colored Paper (8.5""x11"")            $0.10       $50.00
+300   Cardstock (various colors)          $0.50       $150.00
+200   Decorative Washi Tape               $0.20       $40.00
+
+Subtotal:                                      $240.00
+Discount:                                        $0.00
+Total Amount Due:                               $240.00
+
+Expected Delivery Date: 2025-04-09
+
+Thank you for shopping with us!
+```"
+6,2025-04-06,30016.559999999998,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Stock for colorful construction paper and white printer paper was insufficient, but restocking has been initiated."
+7,2025-04-07,-4363.440000000002,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of the following items for your upcoming exhibition:  
+- 500 sheets of glossy A4 paper  
+- 1000 sheets of matte A3 paper  
+- 300 poster boards (24"" x 36"")  
+- 200 sheets of heavyweight cardstock  
+
+Your supplies are scheduled for delivery on April 14, 2025. Please find your invoice below.
+
+```
+Invoice No: INV-2025-001
+Date: 2025-04-07
+
+Bill/Ship To:
+Name:    [placeholder]
+Address: [placeholder]
+Email:   [placeholder]
+
+Items:
+Qty   Description                           Unit Price    Line Total
+500   Glossy A4 Paper                          $0.20       $100.00
+1000  Matte A3 Paper                           $0.18       $180.00
+300   Poster Boards (24"" x 36"")                $1.00       $300.00
+200   Heavyweight Cardstock                    $0.20        $40.00
+
+Subtotal:                                           $620.00
+Discount (Volume Discount Applied):               -$0.00
+Total Amount Due:                                  $620.00
+
+Expected Delivery Date: 2025-04-14
+
+Thank you for shopping with us!
+```"
+8,2025-04-07,-4363.440000000002,2723.4400000000005,unfulfilled,"We're sorry, but our inventory cannot be verified at this time."
+9,2025-04-07,-4363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Stock levels are zero for all requested items and cash balance is negative.
+13,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Stock is insufficient and cash balance is negative.
+12,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are 0 for all requested items, and cash balance is -4363.44."
+10,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Stock levels are 0 for both items, and cash balance is negative."
+11,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Insufficient cash balance to fulfill the order immediately.
+14,2025-04-09,-9363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: The poster paper cannot be delivered by the requested date.
+15,2025-04-12,-9363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are zero for all requested items, and cash balance is negative."
+16,2025-04-13,-9363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: None
+17,2025-04-14,-9363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are zero for all requested items, and the cash balance is negative."
+18,2025-04-14,-13363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Insufficient stock for all items and cash balance is negative.
+19,2025-04-15,-13363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are zero for A4 glossy paper and A3 matte paper, and the cash balance is negative."
+20,2025-04-17,-13363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are 0 for all requested items, and cash balance is -13363.44."

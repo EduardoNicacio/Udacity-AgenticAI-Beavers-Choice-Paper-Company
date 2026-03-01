@@ -3,8 +3,8 @@ import logging
 from datetime import datetime
 
 # Constants for dates
-REQUEST_DATE = "2026-09-25"
-DELIVERY_DATE = "2026-10-10"
+REQUEST_DATE = "2025-04-01"
+DELIVERY_DATE = "2025-04-15"
 
 # Configure logging
 logging.basicConfig(
@@ -46,13 +46,13 @@ sample_request2 = f"""
 # Process the 1st request and log the response
 try:
     response = process_request(sample_request1)
-    logger.info(response)
+    print(response)
 except Exception as e:
     logger.error(f"Failed to process sample_request1: {e}")
 
 # Process the 2nd request and log the response
 try:
     response = process_request(sample_request2)
-    logger.info(response)
+    print(response)
 except Exception as e:
     logger.error(f"Failed to process sample_request2: {e}")
