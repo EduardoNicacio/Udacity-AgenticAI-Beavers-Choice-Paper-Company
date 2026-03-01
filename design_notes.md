@@ -217,6 +217,6 @@ Use `safe_run` instead of direct `.run_sync()` calls throughout the workflow.
 
 ---
 
-## Final Verdict
+## Final Notes
 
 The provided Python script and accompanying artifacts meet **all** rubric requirements with high fidelity. Minor refinements—particularly around cash‑balance validation, documentation, and modularization—would push the solution to a perfect score. The current implementation is ready for deployment or further extension (e.g., adding a Customer Agent or Business‑Advisor Agent) as suggested in the reflection document.
