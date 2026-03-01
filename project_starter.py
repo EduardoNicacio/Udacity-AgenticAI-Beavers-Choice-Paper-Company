@@ -199,8 +199,8 @@ def generate_sample_inventory(
                 "item_name": item["item_name"],
                 "category": item["category"],
                 "unit_price": item["unit_price"],
-                "current_stock": np.random.randint(200, 800),
-                "min_stock_level": np.random.randint(50, 150),
+                "current_stock": np.random.randint(1000, 5000),
+                "min_stock_level": np.random.randint(250, 500),
             }
         )
 
@@ -321,7 +321,7 @@ def init_database(db_engine: Engine, seed: int = 11235) -> Engine:
                     "item_name": item["item_name"],
                     "transaction_type": "stock_orders",
                     "units": item["current_stock"],
-                    "price": -(item["current_stock"] * item["unit_price"]),
+                    "price": item["current_stock"] * item["unit_price"],
                     "transaction_date": initial_date,
                 }
             )
@@ -576,15 +576,13 @@ def get_cash_balance(as_of_date: Union[str, datetime]) -> float:
 
         # Compute the difference between sales and stock purchases
         if not transactions.empty:
-            # Sales revenue (positive)
             total_sales = transactions.loc[
                 transactions["transaction_type"] == "sales", "price"
             ].sum()
-            # Purchases are now stored as negative numbers – add them
-            total_purchases = -transactions.loc[
+            total_purchases = transactions.loc[
                 transactions["transaction_type"] == "stock_orders", "price"
             ].sum()
-            return float(total_sales - total_purchases)  # sales + (‑purchases)
+            return float(total_sales - total_purchases)
 
         return 0.0
 
@@ -621,7 +619,7 @@ def generate_financial_report(as_of_date: Union[str, datetime]) -> Dict:
         as_of_date = as_of_date.isoformat()
 
     # Get current cash balance
-    cash = get_cash_balance(as_of_date)
+    cash_balance = get_cash_balance(as_of_date)
 
     # Get current inventory snapshot
     inventory_df = pd.read_sql("SELECT * FROM inventory", db_engine)
@@ -659,9 +657,9 @@ def generate_financial_report(as_of_date: Union[str, datetime]) -> Dict:
 
     return {
         "as_of_date": as_of_date,
-        "cash_balance": cash,
+        "cash_balance": cash_balance,
         "inventory_value": inventory_value,
-        "total_assets": cash + inventory_value,
+        "total_assets": cash_balance + inventory_value,
         "inventory_summary": inventory_summary,
         "top_selling_products": top_selling_products,
     }
@@ -760,7 +758,7 @@ model = OpenAIChatModel(model_name=os.getenv("OPENAI_API_MODEL", "gpt-4o-mini"))
 tool_create_transaction = Tool(
     name="create_transaction",
     description="""
-        Records a new transaction (stock order or sale) with specified item name, quantity, total price, and transaction date into the database's transactions table.
+        Records a new transaction (`stock_orders` or `sales`) with specified item name, transaction_type, quantity, total price, and transaction date into the database's transactions table.
     """,
     function=create_transaction,
     require_parameter_descriptions=True,
@@ -922,8 +920,7 @@ inventory_agent = Agent(
                 - If cash < estimated restock cost, set `proceed` to False and explain.  
             b. If cash >= estimated restock cost:
                 i. Use `create_transaction` to reorder the item.  
-                ii. Estimate restocking time with `get_supplier_delivery_date`.  
-                iii. If delivery date is after expected delivery for all items, set `proceed` to False and explain; otherwise set `proceed` to True.  
+                ii. Estimate restocking time with `get_supplier_delivery_date`.   
         4. Inform next agent that material has been reordered if applicable.
 
         ### Output Expectations:
@@ -989,9 +986,9 @@ ordering_agent = Agent(
         You are the Ordering Agent for Beaver's Choice Paper Company, responsible for completing customer orders based on the provided quote and current inventory status.
 
         ### Responsibilities:
-        1. Assume customer acceptance - proceed with the order.
+        1. Assume customer acceptance - proceed with the `sales` order.
         2. Estimate delivery date using order size, current date, and `get_supplier_delivery_date` if needed.
-        3. Record the sale with `create_transaction`.
+        3. Record the order with `create_transaction`.
         4. Respond to the customer: confirm success, provide estimated delivery date, thank them.
 
         ### Tools Available:
@@ -1001,7 +998,7 @@ ordering_agent = Agent(
 
         ### Important Notes:
         - Do not generate a new quote or modify pricing.
-        - Do not create a resupply order if cash balance is negative.
+        - Do not create a `stock_orders` order if cash balance is negative.
         - If restocking isn't possible, inform the customer.
 
         ### Output Expectations:
@@ -1019,24 +1016,55 @@ invoice_agent = Agent(
     name="Invoicing Agent",
     model_settings=ModelSettings(temperature=0.1),
     system_prompt="""
-        You are the Invoicing Agent for Beaver's Choice Paper Company, responsible for generating professional and complete customer invoices based on finalized orders.
+                    You are the Invoicing Agent for Beaver's Choice Paper Company, responsible for generating professional and complete customer invoices based on finalized orders.
 
-        ### Input Data:
-        Structured data including customer details, items, quantities, unit prices, total price, discounts (if any), and delivery date.
+                    ### Input Data:
+                    Structured data including customer details, items, quantities, unit prices, total price, discounts (if any), and delivery date.
 
-        ### Response Requirements:
-        1. Friendly response text: thank the customer, confirm items and delivery date, mention invoice attachment.
-        2. Formatted plain-text invoice block using ASCII layout with columns aligned by spaces (max width 80).
+                    ### Response Requirements:
+                    1. Friendly response text: thank the customer, confirm items and delivery date, mention invoice attachment.
+                    2. Formatted plain-text invoice block using ASCII layout with columns aligned by spaces (max width 80).
 
-        ### Formatting Notes:
-        - Monospaced layout; align columns with spaces.
-        - Separate sections with dashed lines or whitespace.
+                    ### Formatting Notes:
+                    - Monospaced layout; align columns with spaces.
+                    - Separate sections with dashed lines or whitespace.
+                    
+                    ### Example Invoice:
 
-        ### Example Friendly Response Text:
-        "Thank you for your order, John Doe! We confirm your purchase of 1000 units of A4 Paper (80g/m²), scheduled for delivery on 2025-04-27. Please find your invoice below."
+                    ```txt
+                    Invoice No: INV-2026-001
+                    Date: 2026-02-15
 
-        Always ensure the invoice is accurate and professional.
-    """,
+                    Bill/Ship To:
+                    Name:    John Doe
+                    Address: [placeholder]
+                    Email:   [placeholder]
+
+                    Items:
+                    Qty   Description          Unit Price    Line Total
+                    1000  A4 Paper (80g/m²)         $0.10       $100.00
+
+                    Subtotal:                                   $100.00
+                    Discount (10%):                             -$10.00
+                    Total Amount Due:                            $90.00
+
+                    Expected Delivery Date: 2026-02-27
+
+                    Thank you for shopping with us!
+                    ```
+
+                    ### Mandatory Requirements:
+                    - Always generate a **full invoice** with all required details.  
+                    - Explicitly list any discounts applied.  
+                    - Use `[placeholder]` for missing customer information.  
+                    - Maintain a **clear, professional tone**.  
+
+                    ### Example Friendly Response Text:
+
+                    "Thank you for your order, John Doe! We confirm your purchase of 1000 units of A4 Paper (80g/m²), scheduled for delivery on 2026-02-27. Please find your invoice below."  
+
+                    Always ensure the invoice is accurate, well-formatted, and professional.
+                """,
     tools=[],
 )
 
@@ -1080,6 +1108,7 @@ class MultiAgentWorkflow:
         }
 
         self.agent_usage_count = {
+            "orchestration": 0,
             "inventory": 0,
             "quoting": 0,
             "ordering": 0,
@@ -1170,11 +1199,10 @@ class MultiAgentWorkflow:
                 deps=context,
                 usage_limits=UsageLimits(request_limit=50),
             )
+            self.agent_usage_count["quoting"] += 1
         except UsageLimitExceeded as e:
             logger.error(f"Usage Limit exceeded calling quoting agent: {e}")
             return "We're sorry, but we cannot provide a Quote at this time."
-
-        self.agent_usage_count["quoting"] += 1
 
         sales_prompt = f"""
             User Request: {context.request_body}
@@ -1189,11 +1217,10 @@ class MultiAgentWorkflow:
                 deps=context,
                 usage_limits=UsageLimits(request_limit=50),
             )
+            self.agent_usage_count["ordering"] += 1
         except UsageLimitExceeded as e:
             logger.error(f"Usage Limit exceeded calling sales agent: {e}")
             return "We're sorry, but we cannot complete your Order at this time."
-
-        self.agent_usage_count["ordering"] += 1
 
         invoice_prompt = f"""
             User Request: {context.request_body}
@@ -1244,6 +1271,7 @@ class MultiAgentWorkflow:
                 deps=self.workflow_context,
                 usage_limits=UsageLimits(request_limit=50),
             )
+            self.agent_usage_count["orchestration"] += 1
         except UsageLimitExceeded as e:
             logger.error(f"Usage Limit exceeded calling orchestration agent: {e}")
             return "We're sorry, but we're unable to correctly classify your request at this time."
@@ -1310,9 +1338,9 @@ def run_test_scenarios():
     quote_requests_sample = quote_requests_sample.sort_values("request_date")
 
     # Determine the initial date from the earliest request_date in the sample data
-    initial_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    initial_date = quote_requests_sample["request_date"].min().strftime("%Y-%m-%d")
 
-    # Generate a financial report using the initial date and store it in `report`
+    # Generate a financial report using the initial date and store it in `financial_report`
     financial_report = generate_financial_report(initial_date)
 
     # Extract current cash balance and inventory value from the generated report
@@ -1323,45 +1351,44 @@ def run_test_scenarios():
     # INITIALIZE YOUR MULTI AGENT SYSTEM HERE #
     ###########################################
 
-    multi_agent_workflow = MultiAgentWorkflow()
+    agent_workflow = MultiAgentWorkflow()
 
     results = []
     for idx, row in quote_requests_sample.iterrows():
         request_date = row["request_date"].strftime("%Y-%m-%d")
 
-        print(" " * 80)
+        print("=" * 80)
         print(f"===== Request {idx + 1} =====")  # type: ignore
-        print(" " * 80)
+        print("=" * 80)
         print(f"Context         : {row['job']} organizing {row['event']}")
         print(f"Request Date    : {request_date}")
         print(f"Cash Balance    : ${cash_balance:.2f}")
         print(f"Inventory Value : ${inventory_value:.2f}")
 
         # Process request
-        full_request = f"{row['request']} (Date of request: {request_date})"
+        full_request = f"{row['request']} (Requested on: {request_date})"
 
         #####################################################
         # USE YOUR MULTI AGENT SYSTEM TO HANDLE THE REQUEST #
         #####################################################
 
         # Runs the multi-agent workflow
-        response = multi_agent_workflow.run(full_request)
+        response = agent_workflow.run(full_request)
 
         # After the invoice agent records a sale, recompute the report using request date:
-        financial_report = generate_financial_report(
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        )
+        financial_report = generate_financial_report(request_date)
         cash_balance = financial_report["cash_balance"]
         inventory_value = financial_report["inventory_value"]
 
         print(" " * 80)
         print(f"Response:          {response}")
+        print(" " * 80)
         print(f"Cash Balance:      ${cash_balance:.2f}")
         print(f"Inventory Value:   ${inventory_value:.2f}")
         print(" " * 80)
 
         # Determine fulfillment status
-        if isinstance(response, str) and "INVOICE" in response:
+        if isinstance(response, str) and "INVOICE" in response.upper():
             status = "fulfilled"
         else:
             status = "unfulfilled"
@@ -1377,14 +1404,14 @@ def run_test_scenarios():
             }
         )
 
-        # Sleeps for 1000ms
+        # Sleeps for 1s
         time.sleep(1)
 
-    ################
-    # Final report #
-    ################
+    ###################################
+    # Final report                    #
+    ###################################
     final_report = generate_financial_report(
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        quote_requests_sample["request_date"].max().strftime("%Y-%m-%d")
     )
 
     print("=" * 80)
@@ -1393,7 +1420,7 @@ def run_test_scenarios():
     )
     print("=" * 80)
     print(f"Final Cash:      ${final_report['cash_balance']:.2f}")
-    print(f"Final Inventory: ${final_report['inventory_value']:.8f}")
+    print(f"Final Inventory: ${final_report['inventory_value']:.2f}")
 
     ###################################
     # Print the agents' calls summary #
@@ -1403,7 +1430,7 @@ def run_test_scenarios():
         "============================== AGENT CALL SUMMARY =============================="
     )
     print("=" * 80)
-    for agent, count in multi_agent_workflow.agent_usage_count.items():
+    for agent, count in agent_workflow.agent_usage_count.items():
         print(f"{agent.capitalize()} agent: {count} times")
 
     # Save results

@@ -2,7 +2,7 @@
 
 ## BeaverBot – Multi-Agent Order Processing System
 
-BeaverBot is a modular multi-agent order processing system that simulates real-world workflows for handling customer requests — from natural-language request to final transaction. It’s built for clarity, extensibility, and easy testing.
+BeaverBot is a modular, multi‑agent order‑processing framework that emulates end‑to‑end customer workflows—from natural‑language request ingestion to transaction finalization—engineered for clear separation of concerns, extensible plug‑in interfaces, and straightforward unit‑testability.
 
 ## Project Setup
 
@@ -69,7 +69,6 @@ Udacity-AgenticAI-Beavers-Choice-Paper-Company/
 ├── quotes.csv                      # Another data-set that comes from Udacity
 ├── README.md                       # The project readme file that comes from Udacity
 ├── requirements.txt                # The list of requirements (Python libraries) that need to be installed. See Project Setup above.
-├── run_test_scenarios.txt          # The results from run_test_scenarios(), in plain text
 └── test_results.csv                # Data-set that contains the test results from run_test_scenarios()
 ```
 
@@ -112,9 +111,9 @@ Figure 1. Mermaid diagram showing the agent workflow, tools conventions and util
 ### 3. Evaluation & Results
 
 * **Test data usage:** The script reads `quote_requests_sample.csv` twice (once for initialization, once for processing).  
-* **Cash‑balance changes:** Requests 1-2, 4-5, 7-8, 11-13, 15, 18-20  show a clear change; subsequent requests keep the same negative balance – and satisfies “at least three” requirement.  
-* **Fulfilled quotes:** Requests 1-2, 4-5, 7-8, 11-13, 15, 18-20 are marked `fulfilled`.  
-* **Unfulfilled reasons:** Every unfulfilled request contains a justification string (e.g., “We're sorry, but our inventory cannot be verified at this time.”, “The delivery date exceeds your requested date.”).  
+* **Cash‑balance changes:** Requests 4, 9, 10, 12, 13, and 14 show a clear change, which satisfies “at least three” requirement.
+* **Fulfilled quotes:** Requests 4, 9, 10, 12, 13, and 14are marked `fulfilled`, with the full invoice persisted in the `response` column.
+* **Unfulfilled reasons:** Every unfulfilled request contains a justification string (e.g., “Insufficient stock for all requested items.”, “Insufficient inventory and we cannot confirm delivery by April 15, 2025.”, etc.).
 
 ### 4. Best Practices
 
