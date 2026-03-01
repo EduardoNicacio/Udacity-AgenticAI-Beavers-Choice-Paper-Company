@@ -112,9 +112,9 @@ Figure 1. Mermaid diagram showing the agent workflow, tools conventions and util
 ### 3. Evaluation & Results
 
 * **Test data usage:** The script reads `quote_requests_sample.csv` twice (once for initialization, once for processing).  
-* **Cash‑balance changes:** Requests 1–5 show a clear change; subsequent requests keep the same negative balance – still satisfies “at least three” requirement.  
-* **Fulfilled quotes:** Requests 2, 4 and 5 are marked `fulfilled`.  
-* **Unfulfilled reasons:** Every unfulfilled request contains a justification string (e.g., “Insufficient stock”, “Expected delivery date after requested”).  
+* **Cash‑balance changes:** Requests 1-2, 4-5, 7-8, 11-13, 15, 18-20  show a clear change; subsequent requests keep the same negative balance – and satisfies “at least three” requirement.  
+* **Fulfilled quotes:** Requests 1-2, 4-5, 7-8, 11-13, 15, 18-20 are marked `fulfilled`.  
+* **Unfulfilled reasons:** Every unfulfilled request contains a justification string (e.g., “We're sorry, but our inventory cannot be verified at this time.”, “The delivery date exceeds your requested date.”).  
 
 ### 4. Best Practices
 

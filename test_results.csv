@@ -1,129 +1,355 @@
 request_id,request_date,cash_balance,inventory_value,status,response
-1,2025-04-01,43376.56,2723.4400000000005,fulfilled,"Thank you for your order, valued customer! We confirm your purchase of the following items:  
-- 200 sheets of A4 glossy paper  
-- 100 sheets of heavy cardstock (white)  
-- 100 sheets of colored paper (assorted colors)  
-
-Your supplies are scheduled for delivery on April 5, 2025. Please find your invoice below.
+1,2025-04-01,58376.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 200 sheets of A4 glossy paper, 100 sheets of heavy cardstock (white), and 100 sheets of colored paper (assorted colors), scheduled for delivery on April 15, 2025. Please find your invoice below.
 
 ```
-Invoice No: INV-2025-001
-Date: 2025-04-01
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: [Your Name]
+Order Date: 2025-04-01
+Delivery Date: April 15, 2025
+------------------------------------------------------------
+Item Description                     Quantity   Unit Price   Total Price
+------------------------------------------------------------
+A4 Glossy Paper                       200 sheets    $0.20       $40.00
+Heavy Cardstock (White)               100 sheets    $0.50       $50.00
+Colored Paper (Assorted Colors)       100 sheets    $0.10       $10.00
+------------------------------------------------------------
+Subtotal:                                                  $100.00
+Discount (10% for 400 sheets):                          -$10.00
+------------------------------------------------------------
+Total Amount Due:                                      $90.00
+------------------------------------------------------------
+```
 
-Bill/Ship To:
-Name:    [placeholder]
-Address: [placeholder]
-Email:   [placeholder]
-
-Items:
-Qty   Description                       Unit Price    Line Total
-200   A4 Glossy Paper                     $0.20       $40.00
-100   Heavy Cardstock (white)             $0.50       $50.00
-100   Colored Paper (assorted colors)     $0.10       $10.00
-
-Subtotal:                                      $100.00
-Discount:                                        $0.00
-Total Amount Due:                               $100.00
-
-Expected Delivery Date: 2025-04-05
-
-Thank you for shopping with us!
-```"
-2,2025-04-03,39226.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of colorful poster paper, 300 rolls of streamers, and 200 balloons, scheduled for delivery on April 15, 2025. Please find your invoice below.
+Thank you for your order! We appreciate your business and look forward to serving you. If you have any further questions or requests, feel free to reach out!"
+2,2025-04-03,63671.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of colorful poster paper, 300 rolls of streamers, and 200 balloons, scheduled for delivery on April 7, 2025. Please find your invoice below.
 
 ```
-Invoice No: INV-2025-001
-Date: 2025-04-03
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: [Customer Name]
+Invoice Date: 2025-04-03
+Due Date: 2025-04-07
 
-Bill/Ship To:
-Name:    [placeholder]
-Address: [placeholder]
-Email:   [placeholder]
+Item Description                Quantity    Unit Price    Total
+------------------------------------------------------------
+Colorful Poster Paper               500        $0.25     $125.00
+Streamers                           300        $0.50     $150.00
+Balloons                            200        $0.10      $20.00
+------------------------------------------------------------
+Subtotal:                                               $295.00
+Discount (10%):                                      -$29.50
+------------------------------------------------------------
+Total Amount Due:                                   $265.50
+------------------------------------------------------------
 
-Items:
-Qty   Description                   Unit Price    Line Total
-500   Colorful Poster Paper               $0.10       $50.00
-300   Streamers                           $2.50      $750.00
-200   Balloons                            $0.25       $50.00
+Thank you for choosing Beaver's Choice Paper Company!
+```
 
-Subtotal:                                      $850.00
-Discount:                                       $0.00
-Total Amount Due:                             $850.00
-
-Expected Delivery Date: 2025-04-07
-
-Thank you for shopping with us!
-```"
-3,2025-04-04,39226.56,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Current stock levels are insufficient for A4 and A3 paper.
-4,2025-04-05,37476.56,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Stock was insufficient for both high-quality, recycled cardstock and A4 size printer paper."
-5,2025-04-05,33216.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of 8.5""x11"" colored paper, 300 sheets of cardstock in various colors, and 200 rolls of decorative washi tape, scheduled for delivery on April 9, 2025. Please find your invoice below.
+If you have any further questions or need assistance, feel free to reach out!"
+3,2025-04-04,63671.56,2723.4400000000005,unfulfilled,"We're sorry, but our inventory cannot be verified at this time."
+4,2025-04-05,78946.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of high-quality recycled cardstock in various colors and 250 sheets of A4 size printer paper, scheduled for delivery on April 13, 2025. Please find your invoice below.
 
 ```
-Invoice No: INV-2025-001
-Date: 2025-04-05
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer:                [Customer Name]
+Invoice Date:           2025-04-05
+Due Date:               2025-04-13
+------------------------------------------------------------
+Item Description                          Quantity   Unit Price   Total Price
+------------------------------------------------------------
+High-Quality Recycled Cardstock               500      $0.50      $250.00
+A4 Size Printer Paper                          250      $0.10      $25.00
+------------------------------------------------------------
+Subtotal:                                                       $275.00
+Discount (10% for large order):                             -$27.50
+------------------------------------------------------------
+Total Amount Due:                                          $247.50
+------------------------------------------------------------
+Delivery Date:           April 13, 2025
+------------------------------------------------------------
+Thank you for choosing Beaver's Choice Paper Company!
+------------------------------------------------------------
+```
 
-Bill/Ship To:
-Name:    [placeholder]
-Address: [placeholder]
-Email:   [placeholder]
-
-Items:
-Qty   Description                     Unit Price    Line Total
-500   Colored Paper (8.5""x11"")            $0.10       $50.00
-300   Cardstock (various colors)          $0.50       $150.00
-200   Decorative Washi Tape               $0.20       $40.00
-
-Subtotal:                                      $240.00
-Discount:                                        $0.00
-Total Amount Due:                               $240.00
-
-Expected Delivery Date: 2025-04-09
-
-Thank you for shopping with us!
-```"
-6,2025-04-06,30016.559999999998,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Stock for colorful construction paper and white printer paper was insufficient, but restocking has been initiated."
-7,2025-04-07,-4363.440000000002,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of the following items for your upcoming exhibition:  
-- 500 sheets of glossy A4 paper  
-- 1000 sheets of matte A3 paper  
-- 300 poster boards (24"" x 36"")  
-- 200 sheets of heavyweight cardstock  
-
-Your supplies are scheduled for delivery on April 14, 2025. Please find your invoice below.
+If you have any further questions or need assistance, feel free to reach out!"
+5,2025-04-05,84186.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of 8.5""x11"" colored paper, 300 sheets of cardstock in various colors, and 200 rolls of decorative washi tape, scheduled for delivery on April 9, 2025. Please find your invoice below.
 
 ```
-Invoice No: INV-2025-001
-Date: 2025-04-07
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: [Customer Name]
+Invoice Date: 2025-04-05
+Due Date: 2025-04-09
 
-Bill/Ship To:
-Name:    [placeholder]
-Address: [placeholder]
-Email:   [placeholder]
+Item Description                     Quantity   Unit Price   Total Price
+------------------------------------------------------------
+8.5""x11"" Colored Paper                500        $0.10       $50.00
+Cardstock (various colors)            300        $0.50       $150.00
+Decorative Washi Tape                 200        $0.20       $40.00
+------------------------------------------------------------
+Subtotal:                                                  $240.00
+Volume Discount (5%):                                   -$12.00
+------------------------------------------------------------
+Total Amount Due:                                       $228.00
+------------------------------------------------------------
+Delivery Date: April 9, 2025
+------------------------------------------------------------
+```
 
-Items:
-Qty   Description                           Unit Price    Line Total
-500   Glossy A4 Paper                          $0.20       $100.00
-1000  Matte A3 Paper                           $0.18       $180.00
-300   Poster Boards (24"" x 36"")                $1.00       $300.00
-200   Heavyweight Cardstock                    $0.20        $40.00
+Thank you for choosing Beaver's Choice Paper Company! If you have any further questions or need assistance, feel free to reach out."
+6,2025-04-06,183186.56,2723.4400000000005,unfulfilled,"We're sorry, but our inventory cannot be verified at this time."
+7,2025-04-07,199306.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of glossy A4 paper, 1000 sheets of matte A3 paper, 300 poster boards (24"" x 36""), and 200 sheets of heavyweight cardstock, scheduled for delivery on April 11, 2025. Please find your invoice below.
 
-Subtotal:                                           $620.00
-Discount (Volume Discount Applied):               -$0.00
-Total Amount Due:                                  $620.00
+```
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: Beaver's Choice Paper Company
+Invoice Date: 2025-04-07
+Due Date: 2025-04-11
 
-Expected Delivery Date: 2025-04-14
+Item Description                     Quantity   Unit Price   Total Price
+----------------------------------------------------------------------
+Glossy A4 Paper                      500 sheets    $0.20      $100.00
+Matte A3 Paper                      1000 sheets    $0.18      $180.00
+Poster Boards (24"" x 36"")           300 boards     $1.00      $300.00
+Heavyweight Cardstock                200 sheets    $0.20       $40.00
+----------------------------------------------------------------------
+Subtotal:                                                  $620.00
+Volume Discount (10%):                                   -$62.00
+----------------------------------------------------------------------
+Total Amount Due:                                       $558.00
+------------------------------------------------------------
+```
 
-Thank you for shopping with us!
+Thank you for your order! If you have any further questions or need adjustments, please let us know."
+8,2025-04-07,200146.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of the following items, scheduled for delivery on the respective dates:
+
+- 500 sheets of A4 glossy paper (April 11, 2025)
+- 1000 sheets of A4 matte paper (April 11, 2025)
+- 2000 sheets of A5 colored paper (April 14, 2025)
+- 3000 sheets of A4 recycled paper (April 14, 2025)
+
+Please note that the delivery for the A5 colored paper and A4 recycled paper is after your requested date of April 15, 2025. If this is acceptable, we will proceed as planned. 
+
+Attached is your invoice for the order. 
+
+```
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: Beaver's Choice Paper Company
+Invoice Date: 2025-04-07
+Due Date: 2025-04-15
+
+Items Ordered:
+------------------------------------------------------------
+| Description                | Quantity | Unit Price | Total   |
+|----------------------------|----------|------------|---------|
+| A4 glossy paper            |    500   |    $0.20   | $100.00 |
+| A4 matte paper             |   1000   |    $0.18   | $180.00 |
+| A5 colored paper           |   2000   |    $0.10   | $200.00 |
+| A4 recycled paper          |   3000   |    $0.12   | $360.00 |
+------------------------------------------------------------
+Subtotal:                                           $840.00
+Volume Discount (10%):                             -$84.00
+------------------------------------------------------------
+Final Total:                                     **$756.00**
+------------------------------------------------------------
+```
+
+Thank you for choosing us for your paper supplies! If you have any questions or need further assistance, please let us know."
+9,2025-04-07,546646.56,2723.4400000000005,unfulfilled,"We're sorry, but our inventory cannot be verified at this time."
+13,2025-04-08,550146.56,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: The delivery date exceeds your requested date.
+12,2025-04-08,554192.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 200 sheets of colorful cardstock, 500 sheets of standard printer paper, and 100 paper napkins, scheduled for delivery on April 15, 2025. Please find your invoice below.
+
+```
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: [Customer Name]
+Invoice Date: 2025-04-08
+Due Date: 2025-04-15
+
+Items Ordered:
+------------------------------------------------------------
+| Item                     | Quantity | Unit Price | Total   |
+|--------------------------|----------|------------|---------|
+| Colorful Cardstock       |    200   |    $0.18   | $36.00  |
+| Standard Printer Paper    |    500   |    $0.40   | $200.00 |
+| Paper Napkins            |    100   |    $0.10   | $10.00  |
+------------------------------------------------------------
+Subtotal:                                             $246.00
+Discount (5%):                                      -$12.30
+------------------------------------------------------------
+Total Amount Due:                                   $233.70
+------------------------------------------------------------
+
+Thank you for choosing Beaver's Choice Paper Company!
+```
+
+If you have any further questions or need assistance, feel free to reach out."
+10,2025-04-08,562442.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of high-quality glossy paper and 300 sheets of sturdy cardstock, scheduled for delivery on April 16, 2025. Please find your invoice below.
+
+```
+------------------------------------------------
+                     INVOICE
+------------------------------------------------
+Customer: [Customer Name]
+Invoice Date: 2025-04-08
+Due Date: 2025-04-16
+
+Items Ordered:
+------------------------------------------------
+Description                     Quantity   Unit Price   Total
+------------------------------------------------
+High-Quality Glossy Paper          500      $0.20      $100.00
+Sturdy Cardstock                   300      $0.50      $150.00
+------------------------------------------------
+Total Price:                                           $250.00
+------------------------------------------------
+```
+
+If you have any further questions or need adjustments to your order, please let me know!"
+11,2025-04-08,562596.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of A3 glossy paper and 300 sheets of A4 matte paper, scheduled for delivery on April 12, 2025, ensuring you have everything you need for your exhibition on April 15, 2025. Please find your invoice below.
+
+```
+---------------------------------------------------------
+                        INVOICE
+---------------------------------------------------------
+Customer: Beaver's Choice Paper Company
+Invoice Date: 2025-04-08
+Due Date: 2025-04-12
+
+Items Ordered:
+---------------------------------------------------------
+Description               Quantity      Unit Price      Total
+---------------------------------------------------------
+A3 Glossy Paper              500          $0.20       $100.00
+A4 Matte Paper               300          $0.18        $54.00
+---------------------------------------------------------
+Total Amount Due:                                      $154.00
+---------------------------------------------------------
+```
+
+Thank you for choosing us! If you have any further questions or need assistance, feel free to reach out."
+14,2025-04-09,566596.56,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: The delivery date for the poster paper exceeds the requested delivery date.
+15,2025-04-12,568596.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 10,000 sheets of A4 white paper, 5,000 sheets of A3 colored paper, and 500 reams of cardboard for signage. The expected delivery dates are April 16, 2025, for the cardboard, and April 19, 2025, for both the A4 and A3 paper. Please find your invoice below.
+
+```
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: Beaver's Choice Paper Company
+Invoice Date: 2025-04-12
+Due Date: 2025-04-19
+
+Item Description                     Quantity   Unit Price   Total
+------------------------------------------------------------
+A4 White Paper (10,000 sheets)       10,000      $0.05     $500.00
+A3 Colored Paper (5,000 sheets)       5,000      $0.10     $500.00
+Cardboard (500 reams)                 500        $2.00    $1,000.00
+------------------------------------------------------------
+Subtotal:                                                  $2,000.00
+Discount (10%):                                          -$200.00
+------------------------------------------------------------
+Total Amount Due:                                      $1,800.00
+------------------------------------------------------------
+
+Thank you for your business!
+------------------------------------------------------------
+``` 
+
+If you have any further questions or need adjustments, please let us know!"
+16,2025-04-13,574596.56,2723.4400000000005,unfulfilled,"We're sorry, but our inventory cannot be verified at this time."
+17,2025-04-14,577596.56,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Insufficient stock for paper plates.
+18,2025-04-14,663266.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 500 sheets of high-quality white cardstock, 1000 sheets of standard printing paper, and 200 sheets of colored paper in assorted colors, scheduled for delivery on April 21, 2025. Please find your invoice below.
+
+```
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: Beaver's Choice Paper Company
+Invoice Date: 2025-04-14
+Due Date: 2025-04-21
+
+Item Description                     Quantity    Unit Price    Total Price
+---------------------------------------------------------------------------
+High-Quality White Cardstock           500         $0.50       $250.00
+Standard Printing Paper               1000         $0.40       $400.00
+Colored Paper (Assorted Colors)       200         $0.10        $20.00
+---------------------------------------------------------------------------
+Subtotal:                                                  $670.00
+Discount (10%):                                          -$67.00
+---------------------------------------------------------------------------
+Total Amount Due:                                       $603.00
+---------------------------------------------------------------------------
+Delivery Date: April 21, 2025
+------------------------------------------------------------
+```
+
+If you have any further questions or need assistance, feel free to reach out!"
+19,2025-04-15,709436.56,2723.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 2000 sheets of A4 glossy paper, 1500 sheets of A3 matte paper, and 1000 sheets of cardstock in assorted colors. The expected delivery dates are April 19, 2025, for the cardstock, and April 22, 2025, for both the A4 and A3 papers. Please find your invoice below.
+
+```
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: [Customer Name]
+Invoice Date: 2025-04-15
+Due Date: 2025-04-20
+
+Items Ordered:
+------------------------------------------------------------
+| Item Description                | Quantity | Unit Price | Total Price |
+|----------------------------------|----------|------------|-------------|
+| A4 Glossy Paper                 |   2000   |   $0.20    |   $400.00   |
+| A3 Matte Paper                  |   1500   |   $0.18    |   $270.00   |
+| Cardstock (Assorted Colors)     |   1000   |   $0.50    |   $500.00   |
+------------------------------------------------------------
+| Overall Total Price:            |          |            |  $1,170.00  |
+| Discount (5%):                  |          |            |    -$58.50  |
+------------------------------------------------------------
+| Final Total Price:              |          |            |  $1,111.50  |
+------------------------------------------------------------
+
+Delivery Dates:
+------------------------------------------------------------
+| A4 Glossy Paper                 | April 22, 2025 |
+| A3 Matte Paper                  | April 22, 2025 |
+| Cardstock                       | April 19, 2025 |
+------------------------------------------------------------
+
+Thank you for choosing Beaver's Choice Paper Company!
+------------------------------------------------------------
 ```"
-8,2025-04-07,-4363.440000000002,2723.4400000000005,unfulfilled,"We're sorry, but our inventory cannot be verified at this time."
-9,2025-04-07,-4363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Stock levels are zero for all requested items and cash balance is negative.
-13,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Stock is insufficient and cash balance is negative.
-12,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are 0 for all requested items, and cash balance is -4363.44."
-10,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Stock levels are 0 for both items, and cash balance is negative."
-11,2025-04-08,-4363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Insufficient cash balance to fulfill the order immediately.
-14,2025-04-09,-9363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: The poster paper cannot be delivered by the requested date.
-15,2025-04-12,-9363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are zero for all requested items, and cash balance is negative."
-16,2025-04-13,-9363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: None
-17,2025-04-14,-9363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are zero for all requested items, and the cash balance is negative."
-18,2025-04-14,-13363.440000000002,2723.4400000000005,unfulfilled,Cannot fulfill order at this time. Justification: Insufficient stock for all items and cash balance is negative.
-19,2025-04-15,-13363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are zero for A4 glossy paper and A3 matte paper, and the cash balance is negative."
-20,2025-04-17,-13363.440000000002,2723.4400000000005,unfulfilled,"Cannot fulfill order at this time. Justification: Current stock levels are 0 for all requested items, and cash balance is -13363.44."
+20,2025-04-17,802186.56,1973.4400000000005,fulfilled,"Thank you for your order! We confirm your purchase of 5,000 flyers, 2,000 posters, and 10,000 tickets, scheduled for delivery on April 24, 2025. Please find your invoice below.
+
+```
+------------------------------------------------------------
+                          INVOICE
+------------------------------------------------------------
+Customer: [Your Company Name]
+Invoice Date: 2025-04-17
+Due Date: 2025-04-24
+
+Item Description         Quantity     Unit Price     Total
+------------------------------------------------------------
+Flyers                    5,000        $0.15       $750.00
+Posters                   2,000        $1.00      $2,000.00
+Tickets                  10,000        $0.50      $5,000.00
+------------------------------------------------------------
+Subtotal:                                         $7,750.00
+Discount (10%):                                 -$775.00
+------------------------------------------------------------
+Total Amount Due:                             $6,975.00
+------------------------------------------------------------
+
+Thank you for your business! We look forward to supporting your upcoming concert.
+```"
